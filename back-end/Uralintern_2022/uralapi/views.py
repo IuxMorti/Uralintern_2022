@@ -43,39 +43,46 @@ class CustomerAPIView(generics.ListCreateAPIView):
 
 
 def main_page_login(request):
-    return HttpResponse('<h1>Главная страница сайта стажёра/Авторизация</h1>')
+    return render(request, 'authentication.html')
+
+
+def main_page(request):
+    return render(request, 'trainee/welcome-page.html')
 
 
 def profile(request):
-    return HttpResponse('<h1>Профиль пользователя</h1>')
+    return render(request, 'trainee/profile-change-info.html')
+
+def profile_change(request):
+    return render(request, 'trainee/profile-save-info.html')
 
 
 # def profile_edit(request):
 #     return HttpResponse('<h1>Редактирование профиля</h1>')
 
-def team_intern(request, team_id):
-    return HttpResponse(f'<h1>Команда стажёра</h1> <p>{team_id}</p>')
+def team_intern(request):
+    return render(request, 'trainee/team.html')
 
 
 def estimation_form_intern(request):
-    return HttpResponse('<h1>Форма оценки у стажёра</h1>')
+    return render(request, 'trainee/forms.html')
 
 
 def reports_intern(request):
-    return HttpResponse('<h1>Отчёты у стажёра</h1>')
+    return render(request, 'trainee/reports.html')
 
 
-def estimation_form_tutor(request):
-    return HttpResponse('<h1>Форма оценки у куратора</h1>')
-
-
-def team_tutor(request, team_id):
-    return HttpResponse(f'<h1>Команда куратора</h1> <p>{team_id}</p>')
-
-
-def reports_tutor(request):
-    return HttpResponse('<h1>Отчёты у куратора</h1>')
-
-
-def stages(request):
-    return HttpResponse('<h1>Этапы у куратора</h1>')
+# def estimation_form_tutor(request):
+#     return HttpResponse('<h1>Форма оценки у куратора</h1>')
+#
+#
+# def team_tutor(request, team_id):
+#     return HttpResponse(f'<h1>Команда куратора</h1> <p>{team_id}</p>')
+#
+#
+# def reports_tutor(request):
+#     return HttpResponse('<h1>Отчёты у куратора</h1>')
+#
+#
+# def stages(request):
+#     return HttpResponse('<h1>Этапы у куратора</h1>')

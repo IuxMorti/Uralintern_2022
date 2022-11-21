@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Marks forms</title>
+    <link href="css/styles-forms-hint.css" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <img class='small-logo' src="{% static 'images/logo_small.svg' %}" width="49.82" height="50" alt="Логотип">
+        <div class="profile">
+            <img src="{% static 'images/profile.svg' %}" width="24" height="24" alt="Мой профиль">
+            <p>Мой Профиль</p>
+        </div>
+        <div class="exit">
+            <img src="{% static 'images/exit.svg' %}" width="18" height="18" alt="Выйти">
+            <p>Выйти</p>
+        </div>
+    </header>
+    <main>
+        <div class="hint">
+            <p>Соблюдение сроков. Вовремя приходит на мероприятия. Соблюдение правил работы, требований. Держит слово
+                <br>
+                <br>
+                Значения шкалы
+                <br>
+                <br>
+                (-1): Сроки не соблюдаются. Требования, правила нарушаются.
+                (0): не выявлен или регулярные задержки, предупреждает о них.
+                (1): качество выражено, в целом человека можно назвать организованным, соблюдающим правила.
+                (2): хорошо проявляется. Умеет планировать свою работу и придерживаться плана. Сложную задачу декомпозирует на отдельные мероприятия.
+                (3) : ----</p>
+        </div>
+        <div class="forms">
+            <h2>Форма оценки</h2>
+            <p class="info command">Команда: нет данных</p>
+            <p class="info numbers">(2/3/10)</p>
+            <form class='mark-form' action="" method="post">
+                <label class="form-selector">
+                    <span>Выберите этап:</span>
+                    <select id="form-selector" name="form-selector">
+                        <option value="1">1.Анализ, подготовка ТЗ</option>
+                        <option value="2">2.Обсуждение</option>
+                        <option value="3">3.Тестирование формы оценки</option>
+                    </select>
+                </label>
+                <br>
+                <label class="form-selector">
+                    <span>Выберите стажёра:</span>
+                    <select id="form-selector1" name="form-selector">
+                        <option value="1">Ваганова Ангелина Владимировна</option>
+                        <option value="2">Деньшик Дарья Дмитриевна</option>
+                        <option value="3">Хмелёва Виктория Сергеевна</option>
+                    </select>
+                </label>
+
+                <p class="criteria"><img src="{% static 'images/question_mark.png' %}" width="20" height="20"> Командность:
+                <label>
+
+                    <input id="radio-button11" name="command-mark" class="radio-button" type="radio" value="-1" checked>
+                    -1
+                </label>
+                <label>
+                    <input id="radio-button21" name="command-mark" class="radio-button" type="radio" value="0">
+                    0
+                </label>
+                <label>
+                    <input id="radio-button31" name="command-mark" class="radio-button" type="radio" value="1">
+                    1
+                </label>
+                <label>
+                    <input id="radio-button41" name="command-mark" class="radio-button" type="radio" value="2">
+                    2
+                </label>
+                </p>
+
+                <p class="criteria"><img src="{% static 'images/question_mark.png' %}" width="20" height="20"> Обучаемость:
+                <label>
+                    <input id="radio-button12" name="study-mark" class="radio-button" type="radio" value="-1" checked>
+                    -1
+                </label>
+                <label>
+                    <input id="radio-button23" name="study-mark" class="radio-button" type="radio" value="0">
+                    0
+                </label>
+                <label>
+                    <input id="radio-button34" name="study-mark" class="radio-button" type="radio" value="1">
+                    1
+                </label>
+                <label>
+                    <input id="radio-button45" name="study-mark" class="radio-button" type="radio" value="2">
+                    2
+                </label>
+                </p>
+
+                <p class="criteria"><img src="{% static 'images/question_mark.png' %}" width="20" height="20"> Организованность:
+                <label>
+                    <input id="radio-button1" name="organization-mark" class="radio-button" type="radio" value="-1" checked>
+                    -1
+                </label>
+                <label>
+                    <input id="radio-button2" name="organization-mark" class="radio-button" type="radio" value="0">
+                    0
+                </label>
+                <label>
+                    <input id="radio-button3" name="organization-mark" class="radio-button" type="radio" value="1">
+                    1
+                </label>
+                <label>
+                    <input id="radio-button4" name="organization-mark" class="radio-button" type="radio" value="2">
+                    2
+                </label>
+                </p>
+                <input type="submit" class='give-a-mark' value="Оценить">
+            </form>
+        </div>
+        <div class="navigation">
+            <div class="black">
+                <h2>Навигация</h2>
+            </div>
+            <div class="white"></div>
+            <div class="roles">
+                <div class="name-role supervisor">Руководитель</div>
+                <div class="name-role-value">Нет доступа</div>
+            </div>
+            <div class="roles">
+                <div class="name-role curator">Куратор</div>
+                <div class="name-role-value">Нет доступа</div>
+            </div>
+            <div class="roles">
+                <div class="name-role intern">Стажёр</div>
+                <ul>
+                    <li>
+                        <p>Команда 1</p>
+                        <p>2/3/10</p>
+                    </li>
+                    <li>
+                        <p>Команда n</p>
+                        <p>2/0/n</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="black-bottom"></div>
+        </div>
+    </main>
+</body>
+</html>

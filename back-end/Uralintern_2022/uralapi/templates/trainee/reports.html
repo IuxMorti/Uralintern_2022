@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Marks reports</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles-reports.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <img class='small-logo' src="{% static 'images/logo_small.svg' %}" width="49.82" height="50" alt="Логотип">
+        <div class="profile">
+            <img src="{% static 'images/profile.svg' %}" width="24" height="24" alt="Мой профиль">
+            <p>Мой Профиль</p>
+        </div>
+        <div class="exit">
+            <img src="{% static 'images/exit.svg' %}" width="18" height="18" alt="Выйти">
+            <p>Выйти</p>
+        </div>
+    </header>
+    <main>
+        <div class="pizdec">
+            <h2 class="page-title">Отчёты</h2>
+            <div class="content">       
+            <div class="reports">  
+
+                    <div class="reports-card">
+                        <div class="card-title">Общая</div>
+                            <div class="mark-name">Командность<br>0.38
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                        <div class="graph-values">
+                                                <span>-1</span>
+                                            
+                                                <span>0</span>
+                                            
+                                                <span>1</span>
+                                            
+                                                <span>2</span>
+                                        </div>
+                                    <div class="splitter"></div>
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.38);"></div>   
+                                </div>
+                            </div>
+                            <div class="mark-name">Обучаемость<br>0.69
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                    <div class="splitter"></div>
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.69);"></div>
+                                </div>
+                            </div>
+                            <div class="mark-name">Организованность<br>0.46
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                    <div class="splitter"></div>
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.46);"></div>     
+                                </div>
+                            </div>
+                    </div>
+                
+                    <div class="reports-card">
+                        <div class="card-title">Самооценка</div>
+                            <div class="mark-name">Командность<br>-0.25
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                        <div class="graph-values">
+                                                <span>-1</span>
+                                            
+                                                <span>0</span>
+                                            
+                                                <span>1</span>
+                                            
+                                                <span>2</span>
+                                        </div>
+                                        <div class="negative-line graph-line" style="width: calc(50% * 0.25);"></div>
+                                    <div class="splitter"></div>
+                                </div>
+                            </div>
+                            <div class="mark-name">Обучаемость<br>-0.25
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                        <div class="negative-line graph-line" style="width: calc(50% * 0.25);"></div>
+                                    
+                                    <div class="splitter"></div>   
+                                </div>
+                            </div>
+                            <div class="mark-name">Организованность<br>0.00
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                        <div class="negative-line graph-line" style="width: calc(50% * 0);"></div>
+                                    <div class="splitter"></div>
+                                    
+                                </div>
+                            </div>   
+                    </div>
+
+                    <div class="reports-card">
+                        <div class="card-title">Оценка команды</div>
+                            <div class="mark-name">Командность<br>0.38
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">                     
+                                        <div class="graph-values">
+                                                <span>-1</span>
+                                            
+                                                <span>0</span>
+                                            
+                                                <span>1</span>
+                                            
+                                                <span>2</span>
+                                            
+                                        </div>
+                                    <div class="splitter"></div>
+                                    
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.38);"></div> 
+                                </div>
+                            </div>
+                            <div class="mark-name">Обучаемость<br>0.69
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale"> 
+                                    <div class="splitter"></div>
+                                    
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.69);"></div>     
+                                </div>
+                            </div>
+                            <div class="mark-name">Организованность<br>0.46
+                            </div>
+                            <div class="graph">
+                                <div class="grades-scale">
+                                    
+                                    
+                                    <div class="splitter"></div>
+                                    
+                                        <div class="positive-line graph-line" style="width: calc(50% * 0.46);"></div>
+                                </div>
+                            </div>
+                        </div>      
+                    </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div class="black">
+                <h2>Навигация</h2>
+            </div>
+            <div class="white"></div>
+            <div class="roles">
+                <div class="name-role supervisor">Руководитель</div>
+                <div class="name-role-value">Нет доступа</div>
+            </div>
+            <div class="roles">
+                <div class="name-role curator">Куратор</div>
+                <div class="name-role-value">Нет доступа</div>
+            </div>
+            <div class="roles">
+                <div class="name-role intern">Стажёр</div>
+                <ul>
+                    <li>
+                        <p>Команда 1</p>
+                        <p>2/3/10</p>
+                    </li>
+                    <li>
+                        <p>Команда n</p>
+                        <p>2/0/n</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="black-bottom"></div>
+        </div>
+    </main>
+</body>
+</html>
