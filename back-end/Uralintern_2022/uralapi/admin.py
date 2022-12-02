@@ -1,15 +1,49 @@
 from django.contrib import admin
+
+from .forms import *
 from .models import *
+from .functions import generate_password
 from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin
+from import_export.admin import ImportExportActionModelAdmin
+from import_export import resources
 
 admin.site.unregister(Group)
 
 
+class CustomerResource(resources.ModelResource):
+    class Meta:
+        model = Customer
+        fields = ('id', 'surname', 'firstname', 'patronymic', 'email', 'unhashed_password', 'role_director', 'role_tutor', 'role_intern')
+
+    def before_save_instance(self, instance, using_transactions, dry_run):
+        if not instance.unhashed_password:
+            instance.unhashed_password = generate_password()
+        return instance
+
+
 @admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
+class CustomerAdmin(UserAdmin, ImportExportActionModelAdmin):
+    add_form = CustomerCreationForm
+    form = CustomUserChangeForm
+    resource_class = CustomerResource
+    model = Customer
+    fieldsets = (
+        (None, {'fields': ('surname', 'firstname', 'patronymic', 'email', 'unhashed_password', 'role_director', 'role_tutor', 'role_intern')}),
+        (('Permissions'), {
+            'fields': ('is_active', 'is_superuser', 'is_staff'),
+        }),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'surname', 'firstname', 'patronymic', 'role_director', 'role_tutor', 'role_intern', 'password1', 'password2', 'is_random_password'),
+        }),
+    )
+
     list_display = ('id', 'surname', 'firstname', 'patronymic',
                     'role_director', 'role_tutor', 'role_intern',
-                    'mail', 'password')
+                    'email', 'unhashed_password')
     list_display_links = ('id', 'surname')
     search_fields = ('surname', 'firstname', 'patronymic')
     list_filter = ('role_director', 'role_tutor', 'role_intern')
@@ -34,17 +68,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ('title', 'id_project', 'id_tutor')
     search_fields = ('id_project', 'title', 'id_tutor')
     list_filter = ('id_project', 'id_tutor')
-    filter_horizontal = ['participants']
-
-#
-# @admin.register(InternTeam)
-# class InternTeamAdmin(admin.ModelAdmin):
-#     list_display = ('id_team', 'id_intern')
-
-
-@admin.register(StageTeam)
-class StageTeamAdmin(admin.ModelAdmin):
-    list_display = ('id_team', 'id_stage')
+    filter_horizontal = ['interns', 'stages']
 
 
 @admin.register(Stage)
@@ -52,11 +76,7 @@ class StageAdmin(admin.ModelAdmin):
     list_display = ('title', 'active')
     search_fields = ('title', 'active')
     list_filter = ('active',)
-
-
-@admin.register(EvaluationCriteriaStage)
-class EvaluationCriteriaStageAdmin(admin.ModelAdmin):
-    list_display = ('id_stage', 'id_evaluationCriteria')
+    filter_horizontal = ['evaluation_criteria', ]
 
 
 @admin.register(EvaluationCriteria)
@@ -77,9 +97,6 @@ class InternAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
-
 
 @admin.register(Tutor)
 class TutorAdmin(admin.ModelAdmin):
@@ -92,9 +109,6 @@ class TutorAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
-
 
 @admin.register(Director)
 class DirectorAdmin(admin.ModelAdmin):
@@ -105,9 +119,6 @@ class DirectorAdmin(admin.ModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
 
 

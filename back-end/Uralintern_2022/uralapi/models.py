@@ -5,20 +5,54 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import User, PermissionsMixin
-from django.db import models
+import django.db.utils
+from django.db import models, connection
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.hashers import make_password
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
+
+from django.conf import settings
 
 
-class Customer(models.Model):
+class CustomerManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields) -> 'Customer':
+        if email is None:
+            raise TypeError('Users must have an email address.')
+        customer = self.model(email=self.normalize_email(email))
+        customer.set_password(password)
+        customer.save()
+        return customer
+
+    def create_superuser(self, email, password, **extra_fields) -> 'Customer':
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        if password is None:
+            raise TypeError('Superusers must have a password.')
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        customer = self.create_user(email, password, **extra_fields)
+        customer.is_superuser = True
+        customer.is_staff = True
+        customer.save()
+        return customer
+
+
+class Customer(AbstractUser):
+    username = models.CharField(max_length=100, verbose_name='----!', null=True, blank=True)
     surname = models.CharField(max_length=100, verbose_name='Фамилия')
     firstname = models.CharField(max_length=100, verbose_name='Имя')
     patronymic = models.CharField(max_length=100, verbose_name='Отчество')
-    role_director = models.BooleanField(verbose_name='Роль руководителя')
-    role_tutor = models.BooleanField(verbose_name='Роль куратора')
+    role_director = models.BooleanField(verbose_name='Роль руководителя', default=False)
+    role_tutor = models.BooleanField(verbose_name='Роль куратора', default=False)
     role_intern = models.BooleanField(verbose_name='Роль стажёра', default=True)
-    mail = models.EmailField(unique=True, max_length=250, verbose_name='Почта')
-    password = models.CharField(max_length=10, blank=True, null=True, verbose_name='Пароль')
+    email = models.EmailField(_('email address'), unique=True)
+    unhashed_password = models.CharField(max_length=20, blank=True, null=True, verbose_name='Пароль')
     educational_institution = models.CharField(max_length=500, blank=True, null=True, verbose_name='Университет')
     specialization = models.CharField(max_length=500, blank=True, null=True, verbose_name='Специальность')
     course = models.CharField(max_length=2, blank=True, null=True, verbose_name='Курс обучения')
@@ -27,24 +61,36 @@ class Customer(models.Model):
     vk = models.URLField(blank=True, null=True, verbose_name='Ссылка на VK')
     image = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True, null=True, verbose_name='Фото')
 
+    objects = CustomerManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
     def __str__(self):
         return f'{self.surname} {self.firstname} {self.patronymic}'
 
+    def save(self, *args, **kwargs):
+        super(Customer, self).save(*args, **kwargs)
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.unhashed_password = raw_password  # промежуточно сохраняет пароль и в тоже время хэширует его
+        self._password = raw_password
+
     class Meta:
-        db_table = 'customer'
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
 
 class Director(models.Model):
-    id = models.OneToOneField(Customer, models.DO_NOTHING, db_column='id', primary_key=True, verbose_name='Пользователь')
+    id = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE, primary_key=True, db_column='id',
+                              verbose_name='Пользователь')
     role_director = models.CharField(max_length=100, verbose_name='Роль')
 
     def __str__(self):
         return str(self.id)
 
     class Meta:
-        db_table = 'director'
         verbose_name = 'Руководитель'
         verbose_name_plural = 'Руководители'
 
@@ -59,7 +105,6 @@ class Estimation(models.Model):
     time_voting = models.DateTimeField(verbose_name='Время голосования', auto_now=True)
 
     class Meta:
-        db_table = 'estimation'
         verbose_name = 'Собранная оценка'
         verbose_name_plural = 'Собранные оценки'
 
@@ -72,20 +117,8 @@ class EvaluationCriteria(models.Model):
         return self.title
 
     class Meta:
-        db_table = 'evaluationсriteria'
         verbose_name = 'Критерий оценки'
         verbose_name_plural = 'Критерии оценки'
-
-
-class EvaluationCriteriaStage(models.Model):
-    id_stage = models.ForeignKey('Stage', models.DO_NOTHING, db_column='id_stage', verbose_name='Этап')
-    id_evaluationCriteria = models.ForeignKey(EvaluationCriteria, models.DO_NOTHING, db_column='id_evaluationСriteria', verbose_name='Критерий оценки')
-
-    class Meta:
-        db_table = 'evaluationсriteria_stage'
-        unique_together = (('id_stage', 'id_evaluationCriteria'),)
-        verbose_name = 'Критерий оценки / Этап'
-        verbose_name_plural = 'Критерии оценки / Этапы'
 
 
 class EventUts(models.Model):
@@ -97,33 +130,21 @@ class EventUts(models.Model):
         return self.title
 
     class Meta:
-        db_table = 'event_uts'
         verbose_name = 'Мероприятие'
         verbose_name_plural = 'Мероприятия'
 
 
 class Intern(models.Model):
-    id = models.OneToOneField(Customer, models.DO_NOTHING, db_column='id', primary_key=True, verbose_name='Пользователь')
+    id = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE, primary_key=True, db_column='id',
+                              verbose_name='Пользователь')
     role_intern = models.CharField(max_length=100, verbose_name='Роль')
 
     def __str__(self):
         return str(self.id)
 
     class Meta:
-        db_table = 'intern'
         verbose_name = 'Стажёр'
         verbose_name_plural = 'Стажёры'
-
-
-class InternTeam(models.Model):
-    id_team = models.ForeignKey('Team', models.DO_NOTHING, db_column='id_team', verbose_name='Команда')
-    id_intern = models.ForeignKey(Intern, models.DO_NOTHING, db_column='id_intern', verbose_name='Стажёр')
-
-    class Meta:
-        db_table = 'intern_team'
-        unique_together = (('id_team', 'id_intern'),)
-        verbose_name = 'Стажёр / Команда'
-        verbose_name_plural = 'Стажёры / Команды'
 
 
 class Project(models.Model):
@@ -137,7 +158,6 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        db_table = 'project'
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
 
@@ -145,50 +165,90 @@ class Project(models.Model):
 class Stage(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название этапа')
     active = models.BooleanField(verbose_name='Активно')
+    default = None
+    if 'uralapi_evaluationcriteria' in connection.introspection.table_names():
+        default = EvaluationCriteria.objects.filter(pk__lte=4)
+    # default = None if not EvaluationCriteria.objects.filter(pk__lte=4) else EvaluationCriteria.objects.filter(pk__lte=4)
+    evaluation_criteria = models.ManyToManyField(EvaluationCriteria, verbose_name='Критерии оценки', default=default)
 
     def __str__(self):
         return self.title
 
     class Meta:
-        db_table = 'stage'
         verbose_name = 'Этап оценивания'
         verbose_name_plural = 'Этапы оценивания'
-
-
-class StageTeam(models.Model):
-    id_team = models.ForeignKey('Team', models.DO_NOTHING, db_column='id_team', verbose_name='Название команды')
-    id_stage = models.ForeignKey(Stage, models.DO_NOTHING, db_column='id_stage', verbose_name='Этап')
-
-    class Meta:
-        db_table = 'stage_team'
-        unique_together = (('id_team', 'id_stage'),)
-        verbose_name = 'Этап / Команда'
-        verbose_name_plural = 'Этапы / Команды'
 
 
 class Team(models.Model):
     id_project = models.ForeignKey(Project, models.DO_NOTHING, db_column='id_project', verbose_name='Название проекта')
     title = models.CharField(max_length=200, verbose_name='Название команды')
     id_tutor = models.ForeignKey('Tutor', models.DO_NOTHING, db_column='id_tutor', verbose_name='Куратор')
-    participants = models.ManyToManyField(Intern, verbose_name='Стажёры', blank=True)
+    interns = models.ManyToManyField(Intern, verbose_name='Стажёры', blank=True)
+    default = None
+    if 'uralapi_stage' in connection.introspection.table_names():
+        default = Stage.objects.filter(pk__lte=5)
+    # default = None if not Stage.objects.filter(pk__lte=5) else Stage.objects.filter(pk__lte=5)
+    stages = models.ManyToManyField(Stage, verbose_name='Этапы', blank=True, default=default)
 
     def __str__(self):
         return self.title
 
     class Meta:
-        db_table = 'team'
         verbose_name = 'Команда'
         verbose_name_plural = 'Команды'
 
 
 class Tutor(models.Model):
-    id = models.OneToOneField(Customer, models.DO_NOTHING, db_column='id', primary_key=True, verbose_name='Пользователь')
+    id = models.OneToOneField(settings.AUTH_USER_MODEL, models.CASCADE, primary_key=True, db_column='id',
+                              verbose_name='Пользователь')
     role_tutor = models.CharField(max_length=100, verbose_name='Роль', blank=True)
 
     def __str__(self):
         return str(self.id)
 
     class Meta:
-        db_table = 'tutor'
         verbose_name = 'Куратор'
         verbose_name_plural = 'Кураторы'
+
+
+@receiver(post_save, sender=Customer)
+def create_profiles(sender, instance: Customer, **kwargs):
+    """Обработчик сигнала. При создании/изменении пользователя создает/удаляет запись о
+    нем в таблицах Intern, Tutor или Director(в зависимости от выбранной роли пользователя)"""
+    if instance.role_intern:
+        if not Intern.objects.filter(id=instance).exists():
+            Intern.objects.create(id=instance, role_intern='Стажёр')
+    else:
+        if Intern.objects.filter(id=instance).exists():
+            Intern.objects.get(id=instance).delete()
+
+    if instance.role_tutor:
+        if not Tutor.objects.filter(id=instance).exists():
+            Tutor.objects.create(id=instance, role_tutor='Куратор')
+    else:
+        if Tutor.objects.filter(id=instance).exists():
+            Tutor.objects.get(id=instance).delete()
+
+    if instance.role_director:
+        if not Director.objects.filter(id=instance).exists():
+            Director.objects.create(id=instance, role_director='Руководитель')
+    else:
+        if Director.objects.filter(id=instance).exists():
+            Director.objects.get(id=instance).delete()
+
+
+def change_parent(sender, instance, **kwargs):
+    """Обработчик сигнала. Изменяет родителя при удалении дочерней записи."""
+    if instance.id:
+        if sender is Intern:
+            instance.id.role_intern = False
+        if sender is Tutor:
+            instance.id.role_tutor = False
+        if sender is Director:
+            instance.id.role_director = False
+        instance.id.save()
+
+
+post_delete.connect(change_parent, sender=Intern)
+post_delete.connect(change_parent, sender=Tutor)
+post_delete.connect(change_parent, sender=Director)

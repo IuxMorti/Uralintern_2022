@@ -1,7 +1,12 @@
 from django.urls import path, include
 from .views import *
 
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+)
+
 urlpatterns = [
+    path('', get_routes),
     path('main', main_page_login),
     path('profile', profile),
     path('profile-change', profile_change),
@@ -15,4 +20,6 @@ urlpatterns = [
     # path('estimationFormTutor', estimation_form_tutor),
     # path('reportsTutor', reports_tutor),
     # path('stages', stages),
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
