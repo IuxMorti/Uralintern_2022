@@ -5,6 +5,8 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+import datetime
+
 import django.db.utils
 from django.db import models, connection
 from django.contrib.auth.models import AbstractUser
@@ -13,6 +15,7 @@ from django.contrib.auth.hashers import make_password
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django.conf import settings
 
@@ -103,6 +106,14 @@ class Estimation(models.Model):
     id_stage = models.ForeignKey('Stage', models.DO_NOTHING, db_column='id_stage', verbose_name='Этап')
     id_intern = models.ForeignKey('Intern', models.DO_NOTHING, db_column='id_intern', verbose_name='Стажёр')
     time_voting = models.DateTimeField(verbose_name='Время голосования', auto_now=True)
+    competence1 = models.SmallIntegerField(blank=True, null=True, verbose_name="Вовлеченность",
+                                           validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence2 = models.SmallIntegerField(blank=True, null=True, verbose_name="Организованность",
+                                           validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence3 = models.SmallIntegerField(blank=True, null=True, verbose_name="Обучаемость",
+                                           validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence4 = models.SmallIntegerField(blank=True, null=True, verbose_name="Командность",
+                                           validators=[MinValueValidator(-1), MaxValueValidator(3)])
 
     class Meta:
         verbose_name = 'Собранная оценка'
@@ -163,12 +174,16 @@ class Project(models.Model):
 
 
 class Stage(models.Model):
+    id_project = models.ForeignKey(Project, models.DO_NOTHING, db_column='id_project', verbose_name='Название проекта', null=True)
+    id_team = models.ForeignKey('Team', models.DO_NOTHING, verbose_name='Название команды', null=True)
     title = models.CharField(max_length=100, verbose_name='Название этапа')
-    active = models.BooleanField(verbose_name='Активно')
+    start_date = models.DateField(blank=True, null=True, verbose_name='Дата начала')
+    end_date = models.DateField(blank=True, null=True, verbose_name='Дата окончания')
+    description = models.CharField(max_length=1000, verbose_name='Описание', blank=True, null=True)
+    # active = models.BooleanField(verbose_name='Активно')
     default = None
     if 'uralapi_evaluationcriteria' in connection.introspection.table_names():
         default = EvaluationCriteria.objects.filter(pk__lte=4)
-    # default = None if not EvaluationCriteria.objects.filter(pk__lte=4) else EvaluationCriteria.objects.filter(pk__lte=4)
     evaluation_criteria = models.ManyToManyField(EvaluationCriteria, verbose_name='Критерии оценки', default=default)
 
     def __str__(self):
@@ -184,11 +199,7 @@ class Team(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название команды')
     id_tutor = models.ForeignKey('Tutor', models.DO_NOTHING, db_column='id_tutor', verbose_name='Куратор')
     interns = models.ManyToManyField(Intern, verbose_name='Стажёры', blank=True)
-    default = None
-    if 'uralapi_stage' in connection.introspection.table_names():
-        default = Stage.objects.filter(pk__lte=5)
-    # default = None if not Stage.objects.filter(pk__lte=5) else Stage.objects.filter(pk__lte=5)
-    stages = models.ManyToManyField(Stage, verbose_name='Этапы', blank=True, default=default)
+    team_chat = models.URLField(blank=True, null=True, verbose_name='Ссылка на чат')
 
     def __str__(self):
         return self.title
@@ -252,3 +263,22 @@ def change_parent(sender, instance, **kwargs):
 post_delete.connect(change_parent, sender=Intern)
 post_delete.connect(change_parent, sender=Tutor)
 post_delete.connect(change_parent, sender=Director)
+
+@receiver(post_save, sender=Project)
+def create_stages(sender, instance: Project, **kwargs):
+    start_date = instance.start_date
+    end_date = instance.end_date
+    dates_stage = []
+    while start_date < end_date:
+        date_stage = [start_date]
+        start_date += datetime.timedelta(days=7)
+        if start_date > end_date:
+            start_date = end_date
+        date_stage.append(start_date)
+        dates_stage.append(date_stage)
+    if int(str(dates_stage[-1][1] - dates_stage[-1][0])[:1]) < 5:
+        del dates_stage[-1]
+        dates_stage[-1][1] = end_date
+    for i in range(len(dates_stage)):
+        Stage.objects.create(id_project=instance, start_date=dates_stage[i][0],
+                             end_date=dates_stage[i][1], title=f'Неделя {i + 1} ({instance.title})')

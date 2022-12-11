@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import HttpResponse
-from django.http import JsonResponse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -12,7 +10,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import *
-from .serializers import CustomerSerializer
+from .serializers import *
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -34,19 +32,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['GET'])
 def get_routes(request):
     routes = [
-        '/api/token',
-        '/api/token/refresh',
+        '/token',
+        '/token/refresh',
     ]
 
     return Response(routes)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getNotes(request):
-    user = request.user
-    notes = user.note_set.all()
-    serializer = NoteSerializer(notes, many=True)
-    return Response(serializer.data)
 
 
 # class CustomerAPIView(generics.ListAPIView):
@@ -95,6 +85,7 @@ def main_page(request):
 def profile(request):
     return render(request, 'trainee/profile-change-info.html')
 
+
 def profile_change(request):
     return render(request, 'trainee/profile-save-info.html')
 
@@ -112,6 +103,45 @@ def estimation_form_intern(request):
 
 def reports_intern(request):
     return render(request, 'trainee/reports.html')
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_user(request, id):
+    user = request.user
+    a = Customer.objects.get(id=int(id))
+    b = CustomerSerializer(a)
+    return Response(b.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_user(request, id, *args, **kwargs):
+    user = request.user
+    if user.id != int(id):
+        return 'Вы не можете изменять данные этого пользователя'
+    serializer = CustomerSerializer(data=request.data, instance=request.user)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_user_teams(request, id_user):
+    intern_teams = Team.objects.filter(interns__in=[id_user])
+    tutor_teams = Team.objects.filter(id_tutor=int(id_user))
+    # director_teams = Team.objects.filter(id_tutor=int(id_user))
+    b = TeamSerializer(intern_teams, many=True)
+    c = TeamSerializer(tutor_teams, many=True)
+    return Response({'intern': b.data, 'tutor': c.data})
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_team(request, id_team):
+    a = Team.objects.get(id=int(id_team))
+    b = TeamSerializer(a)
+    return Response(b.data)
 
 
 # def estimation_form_tutor(request):

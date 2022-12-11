@@ -30,8 +30,14 @@ class CustomerAdmin(UserAdmin, ImportExportActionModelAdmin):
     model = Customer
     fieldsets = (
         (None, {'fields': ('surname', 'firstname', 'patronymic', 'email', 'unhashed_password', 'role_director', 'role_tutor', 'role_intern')}),
-        (('Permissions'), {
+        (('Права'), {
             'fields': ('is_active', 'is_superuser', 'is_staff'),
+        }),
+        (('Контакты'), {
+            'fields': ('telephone', 'telegram', 'vk'),
+        }),
+        (('Образование'), {
+            'fields': ('educational_institution', 'specialization', 'course')
         }),
     )
     add_fieldsets = (
@@ -63,19 +69,28 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ('id_event', 'id_director', 'start_date', 'end_date')
 
 
+class TeamResource(resources.ModelResource):
+
+    class Meta:
+        model = Team
+        fields = ('id', 'id_project', 'title', 'id_tutor', 'interns')
+        widgets = {"interns": {"field": "id"}}
+
+
 @admin.register(Team)
-class TeamAdmin(admin.ModelAdmin):
+class TeamAdmin(ImportExportActionModelAdmin):
+    resource_class = TeamResource
     list_display = ('title', 'id_project', 'id_tutor')
     search_fields = ('id_project', 'title', 'id_tutor')
     list_filter = ('id_project', 'id_tutor')
-    filter_horizontal = ['interns', 'stages']
+    filter_horizontal = ['interns',]
 
 
 @admin.register(Stage)
 class StageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'active')
-    search_fields = ('title', 'active')
-    list_filter = ('active',)
+    list_display = ('title', 'id_project', 'start_date', 'end_date')
+    search_fields = ('title', 'id_project')
+    list_filter = ('id_project',)
     filter_horizontal = ['evaluation_criteria', ]
 
 
@@ -124,10 +139,13 @@ class DirectorAdmin(admin.ModelAdmin):
 
 @admin.register(Estimation)
 class EstimationAdmin(admin.ModelAdmin):
-    list_display = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting')
-    search_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting')
-    list_filter = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting')
-    readonly_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting')
+    list_display = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
+                    'competence1', 'competence2', 'competence3', 'competence4')
+    search_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
+                     'competence1', 'competence2', 'competence3', 'competence4')
+    list_filter = ('customer_role', 'id_project', 'id_team', 'time_voting')
+    readonly_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
+                       'competence1', 'competence2', 'competence3', 'competence4')
 
     def has_add_permission(self, request, obj=None):
         return False
