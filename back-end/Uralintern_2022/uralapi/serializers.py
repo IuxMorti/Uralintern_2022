@@ -11,6 +11,7 @@ from .models import *
 #                   'specialization', 'course', 'telephone',
 #                   'telegram', 'vk', 'image')
 class CustomerSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     surname = serializers.CharField()
     firstname = serializers.CharField()
     patronymic = serializers.CharField()
@@ -66,6 +67,7 @@ class StageSerializer(serializers.Serializer):
 
 
 class TeamSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     id_project = serializers.CharField()
     title = serializers.CharField()
     id_tutor = serializers.CharField()

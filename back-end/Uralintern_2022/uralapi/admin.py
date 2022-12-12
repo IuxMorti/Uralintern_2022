@@ -34,7 +34,7 @@ class CustomerAdmin(UserAdmin, ImportExportActionModelAdmin):
             'fields': ('is_active', 'is_superuser', 'is_staff'),
         }),
         (('Контакты'), {
-            'fields': ('telephone', 'telegram', 'vk'),
+            'fields': ('telephone', 'telegram', 'vk', 'image'),
         }),
         (('Образование'), {
             'fields': ('educational_institution', 'specialization', 'course')

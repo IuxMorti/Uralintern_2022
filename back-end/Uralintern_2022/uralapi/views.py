@@ -20,6 +20,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['email'] = user.email
+        token['role_director'] = user.role_director
+        token['role_tutor'] = user.role_tutor
+        token['role_intern'] = user.role_intern
         # ...
 
         return token
@@ -119,7 +122,7 @@ def get_user(request, id):
 def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
-        return 'Вы не можете изменять данные этого пользователя'
+        return Response(status=401)
     serializer = CustomerSerializer(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()

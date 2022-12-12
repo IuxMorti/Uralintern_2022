@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import END_POINTS from '../Auth/EndPoints';
+//import END_POINTS from '../Auth/EndPoints';
 import AuthContext from '../context/AuthContext';
 import "../css/trainee/styles-command.css";
 
 function TeamUser({intern}) {
 
     const {user} = useContext(AuthContext);
-    const PATH_IMAGE = "../"+ END_POINTS.IMAGE.IMAGE;
+    //const PATH_IMAGE = "../"+ END_POINTS.IMAGE.IMAGE;
 
     console.log(intern.image);
     return (
