@@ -1,0 +1,247 @@
+body{
+    background: #F5F5F5;
+    font-family: "Roboto";
+    color: #000000;
+    font-size: 16px;
+    line-height:18px;
+
+    margin:0;
+}
+
+
+.main-header{
+    background: #303030;  
+    color:#FFFFFF;
+    font-size: 16px;
+    line-height: 18px;
+    text-transform: uppercase;
+    height:60px;
+
+    display:flex;
+
+}
+.small-logo{
+    margin-left:47px;
+    margin-top:5px;
+    
+}
+.profile{
+    display:flex;
+    margin-right:auto;;
+}
+
+.profile img{
+    margin-top:19px;
+    margin-left: 47px;
+}
+
+.profile p{
+    margin-left:20px;
+    margin-top:22px;
+}
+
+.exit{
+    display:flex;
+    margin-right:27px;
+}
+
+.exit img{
+    margin-top:22px;
+    margin-right: 18px;
+}
+
+.exit p{
+    margin-top:22px;
+}
+
+
+
+
+
+
+.main{
+    display:flex;
+}
+
+.team{
+    width:924px;
+    margin-left: 47px;
+    margin-left:100px;
+    margin-top:60px;
+}
+
+.team-info{
+    text-align: center;
+}
+ .team-info h2{
+    margin-bottom:33px;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 18px;
+ }
+
+ .team-info p{
+    margin-bottom:12px;
+    line-height: 18px;
+ }
+ .team-info p:last-child{
+    margin-bottom:49px;
+ }
+
+ .command-info-person{
+    display:flex;
+    flex:1fr 1fr 1fr 1fr;
+    margin-left:70px;
+    height:110px;
+    margin-bottom:46px;
+    border-bottom: solid rgba(0, 0, 0, 0.2) thin;
+    
+ }
+ .command-info-person-head{
+    display: flex;
+    margin-left:70px;
+    color: #F57C00;
+    flex:1fr 1fr 1fr 1fr;
+    border-bottom: solid rgba(0, 0, 0, 0.5) thin;
+    height:58px;
+    align-items: center;
+    margin-bottom:26px;
+ }
+
+.text{
+    margin-left:100px;
+    width:225px;
+    align-items: center;
+    text-align: center;
+}
+ .team ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.command-info{
+    display:block;
+    margin:0 auto;
+}
+
+.empty{
+    width:137px;
+}
+
+.command-info img{
+    border-radius: 80px;
+}
+.give-a-mark{
+    background: #F57C00;
+    border-radius: 30px;
+    width: 285px;
+    height: 43px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    margin-left:336px;
+    margin-right:303px;
+    border:none;
+}
+
+.team-numbers{
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 18px;
+    margin-left:448px;
+}
+
+.get-report{
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 30px;
+    width: 119px;
+    height: 43px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+    color: #000000;
+    margin-left:427px;
+    margin-right:378px;
+}
+
+
+.navigation{
+    
+    width:224px;
+    margin-left:auto;
+    margin-top:22px;
+    font-size: 22px;
+    line-height: 18px; 
+}
+
+.navigation h2{
+    font-size: 22px;
+    line-height: 18px;
+    color: #FFFFFF;
+    padding-top:29px;
+    padding-left:16px;
+    font-weight: 400;
+    
+}
+
+.navigation .black{
+    height:77px;
+    background: #303030;
+}
+
+.white{
+    height:45px;
+    background: #FFFFFF;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-color: #000000;
+}
+.roles{
+    background: #FFFFFF;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-color: #000000;
+}
+.name-role{
+    height:45px;
+    background: #FFF7EE;
+    color: #F57C00;
+    font-size: 22px;
+    line-height: 30px;
+
+    align-items: center;
+    text-align: center;
+}
+.name-role-value{
+    height:170px;
+    text-align: center;
+    padding-top:30px;
+}
+
+.intern{
+    text-decoration: underline solid #000000;
+}
+
+.roles ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+    text-align: center;
+    padding-bottom:100px;
+
+}
+.roles li p{
+    text-align: center;
+    margin-bottom:3px;
+}
+
+.black-bottom{
+    background-color: #000000;
+    height:36px;
+}
