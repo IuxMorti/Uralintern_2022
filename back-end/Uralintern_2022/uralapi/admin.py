@@ -18,7 +18,10 @@ class CustomerResource(resources.ModelResource):
 
     def before_save_instance(self, instance, using_transactions, dry_run):
         if not instance.unhashed_password:
-            instance.unhashed_password = generate_password()
+            instance.set_password(generate_password())
+        else:
+            instance.set_password(instance.unhashed_password)
+        instance.save()
         return instance
 
 
@@ -101,40 +104,40 @@ class EvaluationCriteriaAdmin(admin.ModelAdmin):
     list_filter = ('title',)
 
 
-@admin.register(Intern)
-class InternAdmin(admin.ModelAdmin):
-    list_display = ('id', 'role_intern')
-    search_fields = ('id', 'role')
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
-@admin.register(Tutor)
-class TutorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'role_tutor')
-    search_fields = ('id', 'role')
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
+# @admin.register(Intern)
+# class InternAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'role_intern')
+#     search_fields = ('id', 'role')
+#
+#     def has_add_permission(self, request, obj=None):
+#         return False
+#
+#     def has_change_permission(self, request, obj=None):
+#         return False
 
 
-@admin.register(Director)
-class DirectorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'role_director')
-    search_fields = ('id', 'role')
+# @admin.register(Tutor)
+# class TutorAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'role_tutor')
+#     search_fields = ('id', 'role')
+#
+#     def has_add_permission(self, request, obj=None):
+#         return False
+#
+#     def has_change_permission(self, request, obj=None):
+#         return False
 
-    def has_add_permission(self, request, obj=None):
-        return False
 
-    def has_change_permission(self, request, obj=None):
-        return False
+# @admin.register(Director)
+# class DirectorAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'role_director')
+#     search_fields = ('id', 'role')
+#
+#     def has_add_permission(self, request, obj=None):
+#         return False
+#
+#     def has_change_permission(self, request, obj=None):
+#         return False
 
 
 @admin.register(Estimation)

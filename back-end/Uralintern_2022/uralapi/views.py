@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
@@ -71,10 +72,10 @@ def get_routes(request):
 #
 #         return Response({'post': CustomerSerializer(post_new).data})
 
-
-class CustomerAPIView(generics.ListCreateAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+#
+# class CustomerAPIView(generics.ListCreateAPIView):
+#     queryset = Customer.objects.all()
+#     serializer_class = CustomerSerializer
 
 
 def main_page_login(request):
@@ -139,6 +140,7 @@ def get_user_teams(request, id_user):
     c = TeamSerializer(tutor_teams, many=True)
     return Response({'intern': b.data, 'tutor': c.data})
 
+
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_team(request, id_team):
@@ -146,6 +148,59 @@ def get_team(request, id_team):
     b = TeamSerializer(a)
     return Response(b.data)
 
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_estimate(request):
+    a = Estimation.objects.all()
+    b = EstimationSerializer(a, many=True)
+    return Response(b.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def estimate(request, id, *args, **kwargs):
+    estimation = request.data
+    estimation['id_appraiser'] = request.user.id
+    # пробуем получить оценку, если есть, то обновить существующую, если None, то создать новую
+    instance_estimation = Estimation.objects.select_related('id_appraiser', 'id_intern', 'id_stage', 'id_team') \
+        .filter(id_appraiser=estimation['id_appraiser'], id_intern=estimation['id_intern'],
+                id_stage=estimation['id_stage'], id_team=estimation['id_team']).first()
+    # операция обновления стоит дороже
+    serializer = EstimationSerializer(instance_estimation, data=estimation) if instance_estimation else \
+        EstimationSerializer(data=estimation)
+
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_estimations(request, id_user, id_team):
+    if int(request.user.id) != int(id_user) and int(request.user.id) != int(Team.objects.get(id=id_team).id_tutor.id.id):
+        return Response({'Вы не можете смотреть данные отчеты'})
+    self_estimations = Estimation.objects.filter(id_appraiser=id_user, id_team=id_team, id_intern=id_user)
+    self_estimation = get_report(self_estimations)
+    team_estimations = Estimation.objects.filter(~Q(id_appraiser=id_user), id_team=id_team, id_intern=id_user)
+    team_estimation = get_report(team_estimations)
+    total_estimation = team_estimations.first()
+    total_estimation.competence1 = (self_estimation.competence1 + team_estimation.competence1) / 2
+    total_estimation.competence2 = (self_estimation.competence2 + team_estimation.competence2) / 2
+    total_estimation.competence3 = (self_estimation.competence3 + team_estimation.competence3) / 2
+    total_estimation.competence4 = (self_estimation.competence4 + team_estimation.competence4) / 2
+    return Response({'total_estimation': ReportSerializer(total_estimation).data,
+                     'self_estimation': ReportSerializer(self_estimation).data,
+                     'team_estimation': ReportSerializer(team_estimation).data})
+
+def get_report(estimations):
+    estimation = estimations.first()
+    if len(estimations) != 0:
+        estimation.competence1 = sum([i.competence1 for i in estimations]) / len(estimations)
+        estimation.competence2 = sum([i.competence2 for i in estimations]) / len(estimations)
+        estimation.competence3 = sum([i.competence3 for i in estimations]) / len(estimations)
+        estimation.competence4 = sum([i.competence4 for i in estimations]) / len(estimations)
+    return estimation
 
 # def estimation_form_tutor(request):
 #     return HttpResponse('<h1>Форма оценки у куратора</h1>')
