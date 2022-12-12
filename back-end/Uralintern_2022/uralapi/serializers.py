@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-
+import datetime
 
 # class CustomerSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -11,6 +11,7 @@ from .models import *
 #                   'specialization', 'course', 'telephone',
 #                   'telegram', 'vk', 'image')
 class CustomerSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     surname = serializers.CharField()
     firstname = serializers.CharField()
     patronymic = serializers.CharField()
@@ -51,6 +52,10 @@ class InternsSerializer(serializers.Serializer):
     id = CustomerSerializer()
 
 
+class TutorSerializer(serializers.Serializer):
+    id = CustomerSerializer()
+
+
 class EvaluationCriteriaSerializer(serializers.Serializer):
     title = serializers.CharField()
     description = serializers.CharField()
@@ -68,17 +73,49 @@ class StageSerializer(serializers.Serializer):
 class TeamSerializer(serializers.Serializer):
     id_project = serializers.CharField()
     title = serializers.CharField()
-    id_tutor = serializers.CharField()
+    id_tutor = TutorSerializer()
     interns = InternsSerializer(many=True)
-    # stages = StageSerializer(many=True)
     team_chat = serializers.URLField()
 
 
-# class TeamSerializer(serializers.ModelSerializer):
-#     # interns = CustomerSerializer(many=True)
-#     class Meta:
-#         model = Team
-#         fields = ('id_project', 'title', 'id_tutor', 'interns', 'stages', 'team_chat')
+class ReportSerializer(serializers.Serializer):
+    id_appraiser = serializers.CharField()
+    customer_role = serializers.CharField()
+    id_project = serializers.CharField()
+    id_team = serializers.CharField()
+    id_stage = serializers.CharField()
+    id_intern = serializers.CharField()
+    time_voting = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    competence1 = serializers.FloatField(allow_null=True, validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence2 = serializers.FloatField(allow_null=True, validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence3 = serializers.FloatField(allow_null=True, validators=[MinValueValidator(-1), MaxValueValidator(3)])
+    competence4 = serializers.FloatField(allow_null=True, validators=[MinValueValidator(-1), MaxValueValidator(3)])
 
-# class EstimationSerializer(serializers.Serializer):
-#     id_appraiser
+
+class EstimationSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Estimation.objects.create(**validated_data)
+
+    def update(self, instance: Estimation, validated_data):
+        # Далее, если в словаре есть такой ключ, перепишет данные в базе, либо оствит то, что было
+        instance.competence1 = validated_data.get('competence1', instance.competence1)
+        instance.competence2 = validated_data.get('competence2', instance.competence2)
+        instance.competence3 = validated_data.get('competence3', instance.competence3)
+        instance.competence4 = validated_data.get('competence4', instance.competence4)
+        instance.time_voting = datetime.datetime.now()
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Estimation
+        fields = ('id_appraiser',
+                  'customer_role',
+                  'id_project',
+                  'id_team',
+                  'id_stage',
+                  'id_intern',
+                  'time_voting',
+                  'competence1',
+                  'competence2',
+                  'competence3',
+                  'competence4',)

@@ -99,7 +99,7 @@ class Director(models.Model):
 
 
 class Estimation(models.Model):
-    id_appraiser = models.IntegerField(verbose_name='Оценщик')
+    id_appraiser = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, verbose_name='Оценщик')
     customer_role = models.CharField(max_length=23, verbose_name='Роль пользователя')
     id_project = models.ForeignKey('Project', models.DO_NOTHING, db_column='id_project', verbose_name='Проект')
     id_team = models.ForeignKey('Team', models.DO_NOTHING, db_column='id_team', verbose_name='Команда')
@@ -118,6 +118,7 @@ class Estimation(models.Model):
     class Meta:
         verbose_name = 'Собранная оценка'
         verbose_name_plural = 'Собранные оценки'
+        unique_together = ('id_appraiser', 'id_team', 'id_stage', 'id_intern')
 
 
 class EvaluationCriteria(models.Model):
@@ -263,6 +264,7 @@ def change_parent(sender, instance, **kwargs):
 post_delete.connect(change_parent, sender=Intern)
 post_delete.connect(change_parent, sender=Tutor)
 post_delete.connect(change_parent, sender=Director)
+
 
 @receiver(post_save, sender=Project)
 def create_stages(sender, instance: Project, **kwargs):
