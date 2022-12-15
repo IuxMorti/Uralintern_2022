@@ -7,6 +7,8 @@ import UserInput from "../components/UserInput";
 import AuthContext from "../context/AuthContext";
 import useAxios from "../utils/useAxios";
 import "../css/trainee/styles-profile.css";
+import FilledForms from "../components/FilledForms";
+
 const User = () => {
     let { userId } = useParams();
     let { user } = useContext(AuthContext);
@@ -19,7 +21,6 @@ const User = () => {
     const changeUser = ({ name, value }) => {
         if (!Object.keys(userClone).length) {
             setClone({ ...userData });
-            console.log("HELLOWORLD");
         }
         setClone({
             ...userClone,
@@ -34,10 +35,8 @@ const User = () => {
             SetStatus(response.status);
             if (response.status === 200) {
                 const data = response.data;
-                console.log("GetUser");
                 setUser({ ...data });
                 setClone({ ...data });
-                console.log("GLHF", userClone);
             } else {
                 console.log(status);
             }
@@ -81,14 +80,11 @@ const User = () => {
                                         height="135"
                                         alt="imageuser"
                                     />
-                                    <div className="cloud">
-                                        <p className="filled-forms">
-                                            Заполненные формы:
-                                        </p>
-                                        <p className="filled-forms-count">
-                                            2/n
-                                        </p>
-                                    </div>
+                                    {userId == user.user_id ? (
+                                        <FilledForms userId={user.user_id} />
+                                    ) : (
+                                        <div></div>
+                                    )}
                                 </div>
                                 <button className="change-photo">
                                     Изменить фото

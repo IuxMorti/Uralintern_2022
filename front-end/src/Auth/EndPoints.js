@@ -4,6 +4,10 @@ const END_POINTS = {
         GET_TEAMS: "UralIntern/get-user-teams/",
         GET_TEAM: "UralIntern/get-team/",
         CHANGE_INFO: "UralIntern/user-change/",
+        GET_STAGE: "UralIntern/get-stages/",
+        GET_ESTIMATIONS: "UralIntern/get-estimations/",
+        ESTIMATE: "UralIntern/estimate/",
+        GET_FORMS: "UralIntern/get-forms/",
     },
     AUTH: {
         LOGIN: "/UralIntern/token/",

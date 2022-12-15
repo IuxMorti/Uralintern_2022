@@ -11,7 +11,7 @@
 .ural-intern{
     margin-left:20px;
 }
-.ural-intern a{
+.ural-intern-a{
     text-decoration:none;
     color: inherit;
 }
@@ -20,11 +20,11 @@
     text-align: right;
 }
 
- .VK-link p{
+ .VK-link-p{
     margin-bottom:13px;
     margin-right:35px;
  }
- .VK-link a{
+ .VK-link-a{
     display: block;
     margin-right:22px;
     margin-bottom: 20px;

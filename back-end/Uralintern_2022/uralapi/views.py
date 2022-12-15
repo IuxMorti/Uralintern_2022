@@ -1,3 +1,5 @@
+
+from rest_framework import status
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics
@@ -123,7 +125,7 @@ def get_user(request, id):
 def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
-        return Response(status=401)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     serializer = CustomerSerializer(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -159,7 +161,7 @@ def get_estimate(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def estimate(request, id, *args, **kwargs):
+def estimate(request, *args, **kwargs):
     estimation = request.data
     estimation['id_appraiser'] = request.user.id
     # пробуем получить оценку, если есть, то обновить существующую, если None, то создать новую
@@ -202,17 +204,31 @@ def get_report(estimations):
         estimation.competence4 = sum([i.competence4 for i in estimations]) / len(estimations)
     return estimation
 
-# def estimation_form_tutor(request):
-#     return HttpResponse('<h1>Форма оценки у куратора</h1>')
-#
-#
-# def team_tutor(request, team_id):
-#     return HttpResponse(f'<h1>Команда куратора</h1> <p>{team_id}</p>')
-#
-#
-# def reports_tutor(request):
-#     return HttpResponse('<h1>Отчёты у куратора</h1>')
-#
-#
-# def stages(request):
-#     return HttpResponse('<h1>Этапы у куратора</h1>')
+
+@api_view()
+# @permission_classes([IsAuthenticated])
+def get_stages(request, id_team):
+    team = Team.objects.get(id=id_team)
+    if not team:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    stages = Stage.objects.filter(id_project=team.id_project.id)
+    return Response(StageSerializer(stages, many=True).data)
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_forms(request, id_user):
+    teams = Team.objects.filter(Q(interns__in=[id_user]))
+    count_stages = [[team.interns.count(), Stage.objects.filter(id_project=team.id_project.id)] for team in teams]
+    filtered_stages = []
+    for i in range(len(count_stages)):
+        stages = count_stages[i][1]
+        filtered_stages.append([count_stages[i][0]])
+        for s in stages:
+            if s.start_date <= datetime.date.today() <= s.end_date:
+                filtered_stages[i].append(s)
+    total_count = sum(i[0] * (len(i[1:])) for i in filtered_stages)
+    filtered_stages = [filtered_stage[1] for filtered_stage in filtered_stages]
+    user_estimations = Estimation.objects.filter(id_appraiser=1, id_stage__in=filtered_stages)
+    return Response({'not estimated': total_count - len(user_estimations),
+                     'estimated': len(user_estimations),
+                     'total': total_count})

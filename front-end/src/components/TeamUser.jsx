@@ -10,7 +10,7 @@ function TeamUser({intern}) {
 
     console.log(intern.image);
     return (
-    <li class="command-info-person">
+    <li className="command-info-person">
                 <div>
                     <a href={`/user/${intern.id}`}>
                     <img
@@ -22,15 +22,15 @@ function TeamUser({intern}) {
                     />
                     </a>
                 </div>
-                <div class="text">
+                <div className="text">
                     {user.user_id === intern.id? "Я": `${intern?.surname} ${intern?.firstname} ${intern?.patronymic}`}
                 </div>
-                <div class="text">
+                <div className="text">
                     <a href={intern?.vk ?? ""} >ВК</a>
                     <p><a href={intern?.telegram ?? ""}>ТГ</a></p>
                     <p>{intern.email}</p>
                 </div>
-                <div class="text">
+                <div className="text">
                     {intern?.educational_institution ?? "Учебное заведение"}
                     <p>{intern?.specialization ?? "Специальность"}</p>
                     <p>{intern?.course ?? "Курс"}</p>

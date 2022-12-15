@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import User from "./pages/User";
 import Footer from "./components/Footer";
 import Team from "./pages/Team";
+import Form from "./pages/Form";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/user/:userId" component={User} />
                     <Route path="/team/:teamId" component={Team} />
                     <Route component={LoginPage} path="/login" exact />
+                    <Route path="/form/:teamId" component={Form} />
                     <Footer />
                 </AuthProvider>
             </Router>

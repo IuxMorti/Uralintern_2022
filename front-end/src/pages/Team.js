@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom";
 import END_POINTS from "../Auth/EndPoints";
 import Navigation from "../components/Navigation";
 import TeamUsersList from "../components/TeamUsersList";
-import "../css/trainee/styles-command.css";
+import ViewTeamTrainee from "../components/ViewTeamTrainee";
+import ViewTeamTutor from "../components/ViewTeamTutor";
+import AuthContext from "../context/AuthContext";
 import useAxios from "../utils/useAxios";
 
 function Team(props) {
+    const { user } = useContext(AuthContext);
     const api = useAxios();
     const { teamId } = useParams();
     const [status, SetStatus] = useState(-1);
@@ -17,50 +20,26 @@ function Team(props) {
             const response = await api.get(END_POINTS.API.GET_TEAM + teamId);
             SetStatus(response.status);
             if (response.status === 200) {
-                console.log("GetUser");
                 setTeam({ ...response.data });
             } else {
-                console.log(status);
+                console.log(response.status);
             }
-        } catch {
-            console.log(status);
+        } catch (e) {
+            console.log(e);
         }
     };
 
-    useEffect(() => {
-        getTeam();
-    }, []);
+    useEffect(() => getTeam(), []);
 
-    return (
-        <div className="main">
-            <div class="team">
-                <div class="team-info">
-                    <h2>{team.title}</h2>
-                    <p>
-                        Проект: <span>{team?.id_project ?? "нет данных"}</span>
-                    </p>
-                    <p>
-                        Куратор: <span>{team?.id_tutor ?? "нет данных"}</span>
-                    </p>
-                    <p>
-                        Командный чат:
-                        <span>
-                            {" "}
-                            {<a href={team?.team_chat}>{team?.team_chat}</a> ??
-                                "нет данных"}
-                        </span>
-                    </p>
-                </div>
-                <div class="command-info">
-                    <TeamUsersList interns={team?.interns} />
-                    <button class="give-a-mark">Дать оценку</button>
-                    <p class="team-numbers">(2/3/10)</p>
-                    <button class="get-report">Отчёт</button>
-                </div>
-            </div>
-            <Navigation />
-        </div>
-    );
+    if (status !== 200) {
+        return <div></div>;
+    }
+
+    if (user.user_id == team?.id_tutor?.id.id) {
+        console.log("TUTOR");
+        return <ViewTeamTutor team={team} />;
+    }
+    return <ViewTeamTrainee team={team} />;
 }
 
 export default Team;

@@ -24,7 +24,6 @@ admin.site.site_header = 'Уральский центр стажировок'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('UralIntern/', include('uralapi.urls')),
-    path('', include('frontend.urls')),
 ]
 
 if settings.DEBUG:

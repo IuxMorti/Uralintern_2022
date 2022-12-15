@@ -62,6 +62,7 @@ class EvaluationCriteriaSerializer(serializers.Serializer):
 
 
 class StageSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     id_project = serializers.CharField()
     title = serializers.CharField()
     start_date = serializers.DateField()

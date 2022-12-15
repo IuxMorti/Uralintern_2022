@@ -26,7 +26,9 @@ urlpatterns = [
     path('user-change/<int:id>', change_user),
     path('get-user-teams/<int:id_user>', get_user_teams),
     path('get-team/<int:id_team>', get_team),
-    path('estimate/<int:id>', estimate),
-    path('estimate/', get_estimate),
+    path('estimate/', estimate),
+    path('get-estimate/', get_estimate),
     path('get-estimations/<int:id_user>/<int:id_team>', get_estimations),
+    path('get-stages/<int:id_team>', get_stages),
+    path('get-forms/<int:id_user>', get_forms)
 ]
