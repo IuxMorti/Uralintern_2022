@@ -1,0 +1,45 @@
+.command-info-person-head{
+    display: flex;
+    margin-left:70px;
+    color: #F57C00;
+    border-bottom: solid rgba(0, 0, 0, 0.5) thin;
+    height:58px;
+    align-items: center;
+    margin-bottom:26px;
+}
+
+.team-ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom:100px;
+}
+
+.photo{
+    width:60px;
+}
+
+.text{
+    align-items: center;
+    text-align: center;
+}
+
+
+.fio, .contacts, .education{
+    width:200px;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    align-items: center;
+}
+
+.table{
+    width:337px;
+}
+
+.command-info-person{
+    display:flex;
+    margin-left:70px;
+    height:110px;
+    margin-bottom:46px;
+ }

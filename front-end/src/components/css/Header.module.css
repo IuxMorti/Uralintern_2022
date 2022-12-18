@@ -1,7 +1,4 @@
 .main-header{
-    position: fixed;
-    left: 100%;
-    bottom: 100%;
     width: 100%;
     background: #303030;  
     color:#FFFFFF;
@@ -9,10 +6,11 @@
     line-height: 18px;
     text-transform: uppercase;
     height:60px;
-
+    margin:0;
     display:flex;
 
 }
+
 .small-logo{
     margin-left:47px;
     margin-top:5px;
@@ -23,12 +21,12 @@
     margin-right:auto;;
 }
 
-.profile img{
+.profile-img{
     margin-top:19px;
     margin-left: 47px;
 }
 
-.profile p{
+.profile-p{
     margin-left:20px;
     margin-top:22px;
 }
@@ -38,11 +36,11 @@
     margin-right:27px;
 }
 
-.exit img{
+.exit-img{
     margin-top:22px;
     margin-right: 18px;
 }
 
-.exit p{
+.exit-p{
     margin-top:22px;
 }

@@ -1,0 +1,28 @@
+.team-ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom:100px;
+}
+.command-info-person-head{
+    display: flex;
+    margin-left:70px;
+    color: #F57C00;
+    border-bottom: solid rgba(0, 0, 0, 0.5) thin;
+    height:58px;
+    align-items: center;
+    margin-bottom:26px;
+}
+
+.empty-head{
+    width:35px;
+}
+
+
+
+.text-head{
+    margin-left: 250px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 18px;
+}

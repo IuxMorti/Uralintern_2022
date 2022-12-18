@@ -1,21 +1,19 @@
 import React from 'react';
-import "../css/tutor/team.css";
 import Navigation from './Navigation';
-import TeamUsersList from './TeamUsersList';
 import TutorTeamUserList from './TutorTeamUserList';
-
+import classes from "./css/ViewTeamTutor.module.css"
 
 function ViewTeamTutor({team}) {
     console.log(team);
     return (
-        <div className="main">
-            <div class="team">
-                <div class="team-info">
-                    <h2>{team.title}</h2>
-                    <p>
+        <div className={classes["main"]}>
+            <div className={classes["team"]}>
+                <div className={classes["team-info"]}>
+                    <h2 className={classes["team-info-h2"]}>{team.title}</h2>
+                    <p className={classes["team-info-p"]}>
                         Проект: <span>{team?.id_project ?? "нет данных"}</span>
                     </p>
-                    <p>
+                    <p className={classes["team-info-p"]}>
                         Куратор:{" "}
                         <a href={"../user/" + team?.id_tutor?.id.id}>
                             {team["id_tutor"]
@@ -27,7 +25,7 @@ function ViewTeamTutor({team}) {
                                 : "Нет данных"}
                         </a>
                     </p>
-                    <p>
+                    <p className={classes["team-info"]}>
                         Командный чат:
                         <span>
                             {" "}
@@ -36,14 +34,14 @@ function ViewTeamTutor({team}) {
                         </span>
                     </p>
                 </div>
-                <div class="command-info">
+                <div className={classes["command-info"]}>
                     <TutorTeamUserList interns={team?.interns} team_id={team.id}/>
                 </div>
-                <div class="buttons">
-                <button class="give-a-mark"><a href={`../form/${team?.id}`}>Дать оценку</a></button>
-                    {/* <button class="get-stages">Этапы для оценивания</button> */}
+                <div className={classes["buttons"]}>
+                <a href={`../form/${team?.id}`}><button className={classes["give-a-mark"]}>Дать оценку</button></a>
+                    {/* <button className="get-stages">Этапы для оценивания</button> */}
                 </div>           
-                <p class="team-numbers">(2/3/10)</p>
+                {/* <p className="team-numbers">(2/3/10)</p> */}
             </div>
             <Navigation />
         </div>

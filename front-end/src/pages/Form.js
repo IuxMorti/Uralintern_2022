@@ -4,8 +4,10 @@ import END_POINTS from "../Auth/EndPoints";
 import Criterion from "../components/Criterion";
 import Navigation from "../components/Navigation";
 import AuthContext from "../context/AuthContext";
-import "../css/tutor/forms.css";
+// import "../css/tutor/forms.css";
 import useAxios from "../utils/useAxios";
+import classes from "../css/module/form.module.css";
+import classNames from "classnames";
 
 function Form(props) {
     const { user } = useContext(AuthContext);
@@ -62,7 +64,10 @@ function Form(props) {
     }, []);
 
     useEffect(() => {
-        const role = team.id_tutor === user.user_id ? "Куратор" : "Стажёр";
+        const role =
+            team?.id_tutor?.id?.id == user.user_id ? "Куратор" : "Стажёр";
+
+        console.log(team?.id_tutor?.id?.id, user.user_id, role);
         setEstimation({
             ...estimation,
             customer_role: role,
@@ -93,8 +98,8 @@ function Form(props) {
         return <div></div>;
     }
     return (
-        <div className="forms-main">
-            <div className="hint">
+        <div className={classes["forms-main"]}>
+            <div className={classes["hint"]}>
                 <p>
                     Соблюдение сроков. Вовремя приходит на мероприятия.
                     Соблюдение правил работы, требований. Держит слово
@@ -112,17 +117,29 @@ function Form(props) {
                     мероприятия. (3) : ----
                 </p>
             </div>
-            <div className="forms">
-                <h2>Форма оценки</h2>
-                <p className="info command">
+            <div className={classes["forms"]}>
+                <h2 className={classes["forms-h2"]}>Форма оценки</h2>
+                <p
+                    className={classNames(
+                        "info",
+                        classes["forms-p"],
+                        classes["command"]
+                    )}
+                >
                     Команда: <a href={`../team/${team.id}`}>{team.title}</a>
                 </p>
-                <p className="info numbers">(2/3/10)</p>
+                <p
+                    className={classNames(
+                        "info",
+                        classes["forms-p"],
+                        classes["numbers"]
+                    )}
+                ></p>
                 <form className="mark-form" onSubmit={submit}>
                     <label>
-                        <span>Выберите этап:</span>
+                        <span className={classes["span"]}>Выберите этап:</span>
                         <select
-                            className="form-selector"
+                            className={classes["form-selector"]}
                             name="form-selector"
                             onChange={(e) =>
                                 onChange("id_stage", e.target.value)
@@ -140,9 +157,11 @@ function Form(props) {
                     </label>
                     <br />
                     <label>
-                        <span>Выберите стажёра:</span>
+                        <span className={classes["span"]}>
+                            Выберите стажёра:
+                        </span>
                         <select
-                            className="form-selector"
+                            className={classes["form-selector"]}
                             onChange={(e) =>
                                 onChange("id_intern", e.target.value)
                             }
@@ -162,31 +181,35 @@ function Form(props) {
                     </label>
 
                     <Criterion
-                        nameCriterion="Командность"
+                        nameCriterion="Вовлеченность"
                         name="competence1"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
-                        nameCriterion="Обучаемость"
+                        nameCriterion="Организованность"
                         name="competence2"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
-                        nameCriterion="Организованность"
+                        nameCriterion="Обучаемость"
                         name="competence3"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
-                        nameCriterion="Вовлеченность"
+                        nameCriterion="Командность"
                         name="competence4"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
 
-                    <input type="submit" className="give-a-mark" />
+                    <input
+                        type="submit"
+                        className={classes["give-a-mark"]}
+                        value="Отправить"
+                    />
                 </form>
             </div>
             <Navigation />

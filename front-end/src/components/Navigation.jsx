@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import END_POINTS from '../Auth/EndPoints';
 import AuthContext from '../context/AuthContext';
 import useAxios from '../utils/useAxios';
-import "../css/trainee/styles-command.css"
 import NavigationRoles from './NavigationRoles';
-
+import classes from "./css/Navigation.module.css"
 
 function Navigation(props) {
     let { user } = useContext(AuthContext);
@@ -36,15 +35,15 @@ function Navigation(props) {
     }, []);
 
     return (
-        <div className="navigation">
-        <div className="black">
-            <h2>Навигация</h2>
+        <div className={classes["navigation"]}>
+        <div className={classes["black"]}>
+            <h2 className={classes["navigation-h2"]} >Навигация</h2>
         </div>
-        <div className="white"></div>
+        <div className={classes["white"]}></div>
         {user.role_director? <NavigationRoles role="" name="Руководитель" users={[]}/>: ""}
         {user.role_tutor? <NavigationRoles role="tutor" users={teamsDate} name="Куратор"/>: ""}
         {user.role_intern ? <NavigationRoles role="intern" users={teamsDate} name="Стажёр"/>:""}
-        <div className="black-bottom"></div>
+        <div className={classes["black-bottom"]}></div>
     </div>
     );
 }

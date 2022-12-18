@@ -1,0 +1,15 @@
+.command-info-person{
+    display:flex;
+    flex:1fr 1fr 1fr 1fr;
+    margin-left:70px;
+    height:110px;
+    margin-bottom:46px;
+    border-bottom: solid rgba(0, 0, 0, 0.2) thin;
+    
+ }
+ .text{
+    margin-left:100px;
+    width:225px;
+    align-items: center;
+    text-align: center;
+}

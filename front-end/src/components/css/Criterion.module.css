@@ -1,0 +1,18 @@
+.mark-form-p{
+    font-size: 20px;
+    line-height: 18px;
+}
+
+.criteria{
+    font-size: 16px;
+    line-height: 18px;
+    margin-bottom:5px;
+}
+
+.criteria:first-child{
+    margin-top:25px;
+}
+
+.criteria span{
+    margin-right:auto;
+}

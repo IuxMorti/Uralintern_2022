@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 import Navigation from './Navigation';
 import TeamUsersList from './TeamUsersList';
+import classes from "./css/ViewTeamTrainee.module.css"
+
 
 function ViewTeamTrainee({team}) {
+    const {user} = useContext(AuthContext);
     return (
-        <div className="main">
-            <div class="team">
-                <div class="team-info">
-                    <h2>{team.title}</h2>
-                    <p>
+        <div className={classes["main"]}>
+            <div className={classes["team"]}>
+                <div className={classes["team-info"]}>
+                    <h2 className={classes["team-info-h2"]}>{team.title}</h2>
+                    <p className={classes["team-info-p"]}>
                         Проект: <span>{team?.id_project ?? "нет данных"}</span>
                     </p>
-                    <p>
+                    <p className={classes["team-info-p"]}>
                         Куратор:{" "}
                         <a href={"../user/" + team?.id_tutor?.id.id}>
                             {team["id_tutor"]
@@ -23,7 +27,7 @@ function ViewTeamTrainee({team}) {
                                 : "Нет данных"}
                         </a>
                     </p>
-                    <p>
+                    <p className={classes["team-info-p"]}>
                         Командный чат:
                         <span>
                             {" "}
@@ -32,11 +36,11 @@ function ViewTeamTrainee({team}) {
                         </span>
                     </p>
                 </div>
-                <div class="command-info">
+                <div className={classes["command-info"]}>
                     <TeamUsersList interns={team?.interns}/>
-                    <button class="give-a-mark"><a href={`../form/${team?.id}`}>Дать оценку</a></button>
-                    {/* <p class="team-numbers">(2/3/10)</p> */}
-                    <button class="get-report">Отчёт</button>
+                    <a href={`../form/${team?.id}`}><button className={classes["give-a-mark"]}>Дать оценку</button></a>
+                    {/* <p className="team-numbers">(2/3/10)</p> */}
+                    <a href={`../report/${team?.id}/${user.user_id}`}><button className={classes["get-report"]}>Отчёт</button></a>
                 </div>
             </div>
             <Navigation />

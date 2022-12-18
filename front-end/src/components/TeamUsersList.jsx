@@ -1,15 +1,15 @@
 import React from 'react';
-import "../css/trainee/styles-command.css";
 import TeamUser from './TeamUser';
+import classes from "./css/TeamUsersList.module.css"
 
 function TeamUsersList({interns}) {
     return (
-        <ul class="main-ul">
-        <li class="command-info-person-head">
-            <div class="empty"></div>
-            <div class="text">ФИО</div>
-            <div class="text">Контакты</div>
-            <div class="text">Образование</div>
+        <ul className={classes["team-ul"]}>
+        <li className={classes["command-info-person-head"]}>
+            <div className={classes["empty-head"]}></div>
+            <div className={classes["text-head"]}>ФИО</div>
+            <div className={classes["text-head"]}>Контакты</div>
+            <div className={classes["text-head"]}>Образование</div>
         </li>
         {interns?.map(intern => <TeamUser intern={intern?.id}/>) ?? ""}
     </ul>

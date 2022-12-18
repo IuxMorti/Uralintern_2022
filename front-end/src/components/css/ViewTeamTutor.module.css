@@ -1,0 +1,58 @@
+.main{
+    display:flex;
+}
+.team{
+    width:1230px;
+    margin-left: 47px;
+    margin-left:0px;
+    margin-top:60px;
+}
+.team-info{
+    text-align: center;
+}
+.team-info-h2{
+    margin-bottom:33px;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 18px;
+ }
+
+ .team-info-p{
+    margin-bottom:12px;
+    line-height: 18px;
+ }
+ .team-info-p:last-child{
+    margin-bottom:49px;
+ }
+
+
+ .command-info{
+    display:block;
+    align-items: center;
+    margin:0 auto;
+}
+
+.give-a-mark{
+    background: #F57C00;
+    border-radius: 30px;
+    width: 242px;
+    height: 43px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    border:none;
+    margin-left: 40%;
+
+    margin-bottom: 30px;
+}
+
+.give-a-mark:hover{
+    cursor: pointer;
+    background: #b15900;
+}
+
+.buttons{
+}

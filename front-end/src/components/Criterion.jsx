@@ -1,11 +1,14 @@
 import React from 'react';
 import RadioButton from './RadioButton';
+import classes from './css/Criterion.module.css'
+import classNames from 'classnames';
+
 
 function Criterion({nameCriterion, name, onChange, isChecked}) {
 /*отправляет объект с name и ключом и обновляет*/
     return (
         
-        <p className="criteria">
+        <p className={classNames(classes[".mark-form-p"],classes["criteria"])}>
             <img
                 src={require("../images/question_mark.png").default}
                 width="20"

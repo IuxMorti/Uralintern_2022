@@ -1,0 +1,102 @@
+.main{
+    display: flex;
+}
+
+.profile-info{
+    width: 697px;
+    margin-left:250px;
+    margin-top:54px;
+}
+
+
+
+.profile-info-h2{
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 18px;
+    margin-top:0;
+
+    margin-left:212px;
+    margin-bottom:52px;
+}
+
+.img-and-filled-forms{
+    display:flex;
+}
+
+.photo-student{
+    border-radius: 80px;
+    display: block;
+    margin-left:197px;
+    margin-right:auto;
+    margin-bottom:27px;
+}
+
+.change-photo{
+    width: 156px;
+    height: 36px;
+    background: #F57C00;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+
+    color: #FFFFFF;
+    border:none;
+    margin-left:186px;
+    margin-bottom:26px;
+
+}
+
+.fio-email{
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 30px;  
+    margin-left:64px;
+    width:400px;
+}
+.fio{
+    text-align: center;
+}
+.email{
+    margin-top:-25px;
+    text-align: center;
+}
+
+.education-h{
+    margin-left:198px;
+}
+
+.grid-container{
+    display:grid;
+    grid-template-columns:174px 317px;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 18px;
+    color:black;
+
+    margin-left:40px;
+    width:491px;
+}
+
+.contact-h{
+    margin-left:214px;
+    margin-top:13px;
+}
+
+.change-info{
+    width: 222px;
+    height: 38px;
+    background: #FFFFFF;
+    border: 1px solid #F57C00;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+    margin-left:159px;
+    margin-top:49px;
+    margin-bottom: 80px;
+    color: #F57C00;
+}

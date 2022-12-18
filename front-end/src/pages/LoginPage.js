@@ -1,63 +1,68 @@
+import classNames from "classnames";
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import classes from "../css/module/auth.module.css";
+
 const LoginPage = () => {
     let { loginUser } = useContext(AuthContext);
     console.log(loginUser);
     return (
-        <div className="body">
-            <main className="main">
-                <h2 className="welcome-phrase">Добро пожаловать!</h2>
-                <div className="content">
-                    <div className="welcome-content">
-                        <img
-                            src="images/logo_big.png"
-                            width="453"
-                            height="358"
-                            alt="Логотип"
-                        />
-                        <p>
-                            Личный кабинет uralintern.ru - средство учёта и
-                            контроля, позволяющее отслеживать и оценивать вклад
-                            каждого участника в командный проект, выполняемый во
-                            время прохождения стажировки.
-                        </p>
-                    </div>
-                    <div className="authentication">
-                        <h3>Вход в систему</h3>
-                        <form
-                            onSubmit={loginUser}
-                            className="log-to-account"
-                            action=""
-                            method="post"
-                        >
-                            <input
-                                className="log-to-account-input login"
-                                type="text"
-                                name="username"
-                                aria-label="Логин"
-                                placeholder="Логин"
-                                required
-                            />
-                            <br />
-                            <input
-                                className="log-to-account-input password"
-                                type="password"
-                                name="password"
-                                aria-label="Пароль"
-                                placeholder="Пароль"
-                                required
-                            />
-                            <br />
-                            <button
-                                className="log-to-account-button"
-                                type="submit"
-                            >
-                                Войти
-                            </button>
-                        </form>
-                    </div>
+        <div className={classes.main}>
+            <h2 className={classes["welcome-phrase"]}>Добро пожаловать!</h2>
+            <div className={classes["content"]}>
+                <div className="welcome-content">
+                    <img
+                        className={classes["welcome-content-img"]}
+                        src={require("../images/logo_big.png").default}
+                        width="453"
+                        height="358"
+                        alt="Логотип"
+                    />
+                    <p className={classes["welcome-content-p"]}>
+                        Личный кабинет uralintern.ru - средство учёта и
+                        контроля, позволяющее отслеживать и оценивать вклад
+                        каждого участника в командный проект, выполняемый во
+                        время прохождения стажировки.
+                    </p>
                 </div>
-            </main>
+                <div className={classes["authentication"]}>
+                    <h3 className={classes["authentication-h3"]}>
+                        Вход в систему
+                    </h3>
+                    <form onSubmit={loginUser}>
+                        <input
+                            className={classNames(
+                                classes["log-to-account-input"],
+                                classes["login"]
+                            )}
+                            type="text"
+                            name="username"
+                            aria-label="Логин"
+                            placeholder="Логин"
+                            required
+                        />
+                        <br />
+                        <input
+                            className={classNames(
+                                classes["log-to-account-input"],
+                                classes["password"]
+                            )}
+                            type="password"
+                            name="password"
+                            aria-label="Пароль"
+                            placeholder="Пароль"
+                            required
+                        />
+                        <br />
+                        <button
+                            className={classes["log-to-account-button"]}
+                            type="submit"
+                        >
+                            Войти
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };
