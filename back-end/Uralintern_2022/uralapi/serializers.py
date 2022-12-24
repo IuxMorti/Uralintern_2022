@@ -43,9 +43,46 @@ class CustomerSerializer(serializers.Serializer):
         instance.telephone = validated_data.get('telephone', instance.telephone)
         instance.telegram = validated_data.get('telegram', instance.telegram)
         instance.vk = validated_data.get('vk', instance.vk)
-        instance.image = validated_data.get('image', instance.image)
         instance.save()
         return instance
+
+class CustomerSerializer1(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    surname = serializers.CharField()
+    firstname = serializers.CharField()
+    patronymic = serializers.CharField()
+    role_director = serializers.BooleanField()
+    role_tutor = serializers.BooleanField()
+    role_intern = serializers.BooleanField()
+    email = serializers.EmailField()
+    unhashed_password = serializers.CharField()
+    educational_institution = serializers.CharField(allow_null=True)
+    specialization = serializers.CharField(allow_null=True)
+    course = serializers.CharField(allow_null=True)
+    telephone = serializers.CharField(allow_null=True)
+    telegram = serializers.URLField(allow_null=True)
+    vk = serializers.URLField(allow_null=True)
+
+    def update(self, instance, validated_data):
+        instance.surname = validated_data.get('surname', instance.surname)
+        instance.firstname = validated_data.get('firstname', instance.firstname)
+        instance.patronymic = validated_data.get('patronymic', instance.patronymic)
+        instance.role_director = validated_data.get('role_director', instance.role_director)
+        instance.role_tutor = validated_data.get('role_tutor', instance.role_tutor)
+        instance.role_intern = validated_data.get('role_intern', instance.role_intern)
+        instance.email = validated_data.get('email', instance.email)
+        instance.unhashed_password = validated_data.get('unhashed_password', instance.unhashed_password)
+        instance.educational_institution = validated_data.get('educational_institution', instance.educational_institution)
+        instance.specialization = validated_data.get('specialization', instance.specialization)
+        instance.course = validated_data.get('course', instance.course)
+        instance.telephone = validated_data.get('telephone', instance.telephone)
+        instance.telegram = validated_data.get('telegram', instance.telegram)
+        instance.vk = validated_data.get('vk', instance.vk)
+        instance.save()
+        return instance
+
+
+
 
 
 class InternsSerializer(serializers.Serializer):

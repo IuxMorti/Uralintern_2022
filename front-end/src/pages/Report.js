@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import END_POINTS from "../Auth/EndPoints";
 import Graph from "../components/Graph";
 import Navigation from "../components/Navigation";
 import useAxios from "../utils/useAxios";
+import classes from "../css/module/report.module.css";
+import AuthContext from "../context/AuthContext";
 
 function Report() {
+    const { user } = useContext(AuthContext);
     const { userId, teamId } = useParams();
     const [estimations, setEstimations] = useState({});
     const api = useAxios();
@@ -63,22 +66,25 @@ function Report() {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-            }}
-        >
-            <Graph
-                legend="Общая оценка"
-                values={getValue("total_estimation")}
-            />
-            <Graph legend="Самооценка" values={getValue("self_estimation")} />
-            <Graph
-                legend="Оценка команды"
-                values={getValue("team_estimation")}
-            />
+        <div className={classes["main"]}>
+            <div className={classes["report-info"]}>
+                <h1 className={classes["report-info-h1"]}>Отчёты</h1>
+                <h2 className={classes["report-info-h2"]}>Общая</h2>
+                <Graph
+                    legend="Общая оценка"
+                    values={getValue("total_estimation")}
+                />
+                <h2 className={classes["report-info-h2"]}>Самооценка</h2>
+                <Graph
+                    legend="Самооценка"
+                    values={getValue("self_estimation")}
+                />
+                <h2 className={classes["report-info-h2"]}>Оценка команды</h2>
+                <Graph
+                    legend="Оценка команды"
+                    values={getValue("team_estimation")}
+                />
+            </div>
             <Navigation />
         </div>
     );

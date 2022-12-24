@@ -10,6 +10,7 @@ import useAxios from "../utils/useAxios";
 import FilledForms from "../components/FilledForms";
 import classes from "../css/module/user.module.css";
 import classNames from "classnames";
+import BASE_URL from "../Auth/BaseUrl";
 
 const User = () => {
     let { userId } = useParams();
@@ -19,7 +20,9 @@ const User = () => {
     let [status, SetStatus] = useState(-1);
     let [isCheck, setCheck] = useState(true);
     let [userClone, setClone] = useState({});
-
+    const [photo, setPhoto] = useState(
+        require("../images/profile.svg").default
+    );
     const changeUser = ({ name, value }) => {
         if (!Object.keys(userClone).length) {
             setClone({ ...userData });
@@ -62,6 +65,21 @@ const User = () => {
         getUser();
     }, []);
 
+    const getPhoto = async () => {
+        if (!userData || !userData?.image) return;
+        try {
+            console.log(userData.image);
+            const response = await api.get(userData.image);
+            setPhoto(URL.createObjectURL(response.data));
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        getPhoto();
+    }, [userData]);
+
     if (status === -1) {
         return <div>Ошибка</div>;
     }
@@ -75,26 +93,31 @@ const User = () => {
                         <img
                             className={classes["photo-student"]}
                             src={
-                                userData.image ??
-                                require("../images/profile.svg").default
+                                userData?.image
+                                    ? BASE_URL + userData.image
+                                    : require("../images/profile.svg").default
                             }
                             width="135"
                             height="135"
                             alt="imageuser"
                         />
                         {/* {userId == user.user_id ? (
-                                        <FilledForms userId={user.user_id} />
-                                    ) : (
-                                        <div></div>
-                                    )} */}
+                            <FilledForms userId={user.user_id} />
+                        ) : (
+                            <div></div>
+                        )} */}
                     </div>
-                    <button className={classes["change-photo"]}>
-                        Изменить фото
-                    </button>
+                    {/* {user.user_id == userId ? (
+                        <button className={classes["change-photo"]}>
+                            Изменить фото
+                        </button>
+                    ) : (
+                        <div></div>
+                    )} */}
                     <div className={classes["fio-email"]}>
                         <p
                             className={classes["fio"]}
-                        >{`${userData.firstname} ${userData.surname} ${userData.patronymic}`}</p>
+                        >{`${userData.surname} ${userData.firstname} ${userData.patronymic}`}</p>
                         <p className={classes["email"]}>
                             {userData.email ?? "email"}
                         </p>

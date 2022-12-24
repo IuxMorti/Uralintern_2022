@@ -37,9 +37,12 @@ function Graph({legend, values}) {
     };      
 
     return (
-      <div style={{"display":"block", "width":"520px", "height":"420"}}>
+      <div>
         <Radar
+        width="520px"
+        height="420px"
         type='radar'
+        class=""
          options={chartOptions} data={data}/>
          </div>
     );

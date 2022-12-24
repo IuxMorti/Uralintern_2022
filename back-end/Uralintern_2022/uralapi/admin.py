@@ -37,11 +37,14 @@ class CustomerAdmin(UserAdmin, ImportExportActionModelAdmin):
             'fields': ('is_active', 'is_superuser', 'is_staff'),
         }),
         (('Контакты'), {
-            'fields': ('telephone', 'telegram', 'vk', 'image'),
+            'fields': ('telephone', 'telegram', 'vk'),
         }),
         (('Образование'), {
             'fields': ('educational_institution', 'specialization', 'course')
         }),
+        (('фото'), {
+            'fields': ('image',)
+        })
     )
     add_fieldsets = (
         (None, {
@@ -67,8 +70,8 @@ class EventUtsAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id_event', 'title', 'id_director', 'start_date', 'end_date')
-    search_fields = ('id_event', 'title', 'id_director')
+    list_display = ('title', 'id_event', 'id_director', 'start_date', 'end_date')
+    search_fields = ('title',)
     list_filter = ('id_event', 'id_director', 'start_date', 'end_date')
 
 
@@ -84,7 +87,7 @@ class TeamResource(resources.ModelResource):
 class TeamAdmin(ImportExportActionModelAdmin):
     resource_class = TeamResource
     list_display = ('title', 'id_project', 'id_tutor')
-    search_fields = ('id_project', 'title', 'id_tutor')
+    search_fields = ('title',)
     list_filter = ('id_project', 'id_tutor')
     filter_horizontal = ['interns',]
 
@@ -92,7 +95,7 @@ class TeamAdmin(ImportExportActionModelAdmin):
 @admin.register(Stage)
 class StageAdmin(admin.ModelAdmin):
     list_display = ('title', 'id_project', 'start_date', 'end_date')
-    search_fields = ('title', 'id_project')
+    search_fields = ('title',)
     list_filter = ('id_project',)
     filter_horizontal = ['evaluation_criteria', ]
 
@@ -144,8 +147,6 @@ class EvaluationCriteriaAdmin(admin.ModelAdmin):
 class EstimationAdmin(admin.ModelAdmin):
     list_display = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
                     'competence1', 'competence2', 'competence3', 'competence4')
-    search_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
-                     'competence1', 'competence2', 'competence3', 'competence4')
     list_filter = ('customer_role', 'id_project', 'id_team', 'time_voting')
     readonly_fields = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',
                        'competence1', 'competence2', 'competence3', 'competence4')

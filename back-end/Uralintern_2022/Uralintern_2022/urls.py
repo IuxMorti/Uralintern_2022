@@ -13,9 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
+from django.views.static import serve as mediaserve
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+
 
 from . import settings
 
@@ -26,5 +29,13 @@ urlpatterns = [
     path('UralIntern/', include('uralapi.urls')),
 ]
 
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns += [
+        url(f'^{settings.MEDIA_URL.lstrip("/")}(?P<path>.*)$',
+            mediaserve, {'document_root': settings.MEDIA_ROOT}),
+        url(f'^{settings.STATIC_URL.lstrip("/")}(?P<path>.*)$',
+            mediaserve, {'document_root': settings.STATIC_ROOT}),
+    ]

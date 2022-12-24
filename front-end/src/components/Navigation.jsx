@@ -40,6 +40,7 @@ function Navigation(props) {
             <h2 className={classes["navigation-h2"]} >Навигация</h2>
         </div>
         <div className={classes["white"]}></div>
+        
         {user.role_director? <NavigationRoles role="" name="Руководитель" users={[]}/>: ""}
         {user.role_tutor? <NavigationRoles role="tutor" users={teamsDate} name="Куратор"/>: ""}
         {user.role_intern ? <NavigationRoles role="intern" users={teamsDate} name="Стажёр"/>:""}

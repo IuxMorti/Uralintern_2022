@@ -14,9 +14,9 @@ function TutorTeamUserList({interns, team_id}) {
                             <div class={classes["fio"]}>ФИО</div>
                             <div class={classes["contacts"]}>Контакты</div>
                             <div class={classes["education"]}>Образование</div>
-                            {/* <div class="text forms">Формы</div> */}
                             <div class={classNames(classes["text"], 
                                 classes["table"])}>Отчёт</div>
+                            <div class={classes["link"]}>отчёты</div>
                     </li>
                     {interns.map(intern => <TutorTeamUser intern={intern.id} team_id={team_id}/>)}
                 </ul>

@@ -13,18 +13,22 @@ const Header = () => {
                 height="50"
                 alt="Логотип"
             />
-            <div className={classes["profile"]}>
-                <a href={user ? `/user/${user.user_id}` : ""}>
-                    <img
-                        className={classes["profile-img"]}
-                        src={require("../images/profile.svg").default}
-                        width="24"
-                        height="24"
-                        alt="Мой профиль"
-                    />
-                </a>
-                <p className={classes["profile-img"]}>Мой Профиль</p>
-            </div>
+            {user ? (
+                <div className={classes["profile"]}>
+                    <a href={user ? `/user/${user.user_id}` : ""}>
+                        <img
+                            className={classes["profile-img"]}
+                            src={require("../images/profile.svg").default}
+                            width="24"
+                            height="24"
+                            alt="Мой профиль"
+                        />
+                    </a>
+                    <p className={classes["profile-img"]}>Мой Профиль</p>
+                </div>
+            ) : (
+                <div className={classes["profile"]}></div>
+            )}
             <div className={classes["exit"]}>
                 <a href="/login">
                     <img

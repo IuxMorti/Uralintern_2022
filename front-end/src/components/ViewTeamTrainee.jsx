@@ -38,9 +38,14 @@ function ViewTeamTrainee({team}) {
                 </div>
                 <div className={classes["command-info"]}>
                     <TeamUsersList interns={team?.interns}/>
+                    {team?.interns?.some(v => v.id.id == user.user_id)?
+                    (<div>
                     <a href={`../form/${team?.id}`}><button className={classes["give-a-mark"]}>Дать оценку</button></a>
-                    {/* <p className="team-numbers">(2/3/10)</p> */}
                     <a href={`../report/${team?.id}/${user.user_id}`}><button className={classes["get-report"]}>Отчёт</button></a>
+                    </div>)
+                    : <div></div>
+                    }
+
                 </div>
             </div>
             <Navigation />

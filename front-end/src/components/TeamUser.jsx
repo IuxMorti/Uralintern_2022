@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import BASE_URL from '../Auth/BaseUrl';
 //import END_POINTS from '../Auth/EndPoints';
 import AuthContext from '../context/AuthContext';
 import classes from "./css/TeamUser.module.css"
@@ -14,8 +15,10 @@ function TeamUser({intern}) {
     <li className={classes["command-info-person"]}>
                 <div>
                     <img
-                        src={ intern?.image ?? require("../images/profile.svg")
-                        .default}
+                        style={{"borderRadius":"50%"}}
+                        src={intern?.image
+                            ? BASE_URL + intern.image
+                            : require("../images/profile.svg").default}
                         width="79"
                         height="90"
                         alt="imageuser"

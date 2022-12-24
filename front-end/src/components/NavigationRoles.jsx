@@ -6,6 +6,7 @@ import classes from "./css/Navigation.module.css"
 function NavigationRoles({name, users, role}) {
     return (
         <div className={classes["roles"]}>
+            
             <div className={classes["name-role"]}>
                 {name}
             </div>

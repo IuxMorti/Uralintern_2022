@@ -21,7 +21,7 @@ function Form(props) {
         id_project: 1,
         id_team: teamId,
         id_stage: null,
-        id_intern: user.user_id,
+        id_intern: null,
         competence1: -1,
         competence2: -1,
         competence3: -1,
@@ -68,9 +68,11 @@ function Form(props) {
             team?.id_tutor?.id?.id == user.user_id ? "Куратор" : "Стажёр";
 
         console.log(team?.id_tutor?.id?.id, user.user_id, role);
+        console.log(team?.interns?.[0].id);
         setEstimation({
             ...estimation,
             customer_role: role,
+            id_intern: team?.interns?.[0].id.id,
             id_stage: stages[0]?.id ?? 1,
         });
     }, [team, stages]);
@@ -97,6 +99,7 @@ function Form(props) {
     if (!team || !stages.length || Object(team).keys?.length === 0) {
         return <div></div>;
     }
+
     return (
         <div className={classes["forms-main"]}>
             <div className={classes["hint"]}>
