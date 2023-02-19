@@ -131,26 +131,47 @@ const User = () => {
                     )}
                 >
                     <div>Учебное заведение:</div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="educational_institution"
-                        value={userClone.educational_institution}
-                        readonly={isCheck}
-                    />
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="educational_institution"
+                            value={userClone.educational_institution}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <p className={classes["info"]}>
+                            {userClone.educational_institution ?? "нет данных"}
+                        </p>
+                    )}
+
                     <div>Специальность: </div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="specialization"
-                        value={userClone.specialization}
-                        readonly={isCheck}
-                    />
+
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="specialization"
+                            value={userClone.specialization}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <p className={classes["info"]}>
+                            {userClone.specialization ?? "нет данных"}
+                        </p>
+                    )}
+
                     <div>Курс: </div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="course"
-                        value={userClone.course}
-                        readonly={isCheck}
-                    />
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="course"
+                            value={userClone.course}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <p className={classes["info"]}>
+                            {userClone.course ?? "нет данных"}
+                        </p>
+                    )}
                 </div>
                 <h3 className={classes["contact-h"]}>Контакты: </h3>
                 <div
@@ -160,26 +181,52 @@ const User = () => {
                     )}
                 >
                     <div>Телефон: </div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="telephone"
-                        value={userClone.telephone}
-                        readonly={isCheck}
-                    />
+
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="telephone"
+                            value={userClone.telephone}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <p className={classes["info"]}>
+                            {userClone.telephone ?? "нет данных"}
+                        </p>
+                    )}
+
                     <div>Ссылка в VK: </div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="vk"
-                        value={userClone.vk}
-                        readonly={isCheck}
-                    />
+
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="vk"
+                            value={userClone.vk}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <a href={userClone.vk} className={classes["info"]}>
+                            {userClone.vk ?? "нет данных"}
+                        </a>
+                    )}
+
                     <div>Ссылка в Telegram: </div>
-                    <UserInput
-                        onChange={changeUser}
-                        name="telegram"
-                        value={userClone.telegram}
-                        readonly={isCheck}
-                    />
+
+                    {!isCheck ? (
+                        <UserInput
+                            onChange={changeUser}
+                            name="telegram"
+                            value={userClone.telegram}
+                            readonly={isCheck}
+                        />
+                    ) : (
+                        <a
+                            href={userClone.telegram}
+                            className={classes["info"]}
+                        >
+                            {userClone.telegram ?? "нет данных"}
+                        </a>
+                    )}
 
                     {user.user_id != userId ? (
                         <div style={{ "margin-bottom": "110px" }}></div>

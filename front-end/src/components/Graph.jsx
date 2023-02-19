@@ -23,7 +23,7 @@ function Graph({legend, values}) {
         }
       ];
 
-    const data = {labels: ['Вовлеченность','Обучаемость','Организованность','Командность'], datasets};
+    const data = {labels: ['Обучаемость','Командность','Вовлечённость','Организованность'], datasets};
     const chartOptions = {
         scale: {
           ticks: {

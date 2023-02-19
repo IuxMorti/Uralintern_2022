@@ -4,12 +4,17 @@ import classes from './css/Criterion.module.css'
 import classNames from 'classnames';
 
 
-function Criterion({nameCriterion, name, onChange, isChecked}) {
+function Criterion({nameCriterion, name, onChange, isChecked, info}) {
 /*отправляет объект с name и ключом и обновляет*/
     return (
         
         <p className={classNames(classes[".mark-form-p"],classes["criteria"])}>
+            
             <img
+                className={classes["question"]}
+                tabIndex={0}
+                onMouseEnter={() => info(true)}
+                onMouseLeave={() => info(false)}
                 src={require("../images/question_mark.png").default}
                 width="20"
                 height="20"

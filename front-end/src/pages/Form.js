@@ -14,6 +14,7 @@ function Form(props) {
     const { teamId } = useParams();
     const [team, setTeam] = useState({});
     const [stages, setStages] = useState([]);
+    const [flag, setFlag] = useState();
     const api = useAxios();
     const [estimation, setEstimation] = useState({
         id_appraiser: user.user_id,
@@ -102,23 +103,27 @@ function Form(props) {
 
     return (
         <div className={classes["forms-main"]}>
-            <div className={classes["hint"]}>
-                <p>
-                    Соблюдение сроков. Вовремя приходит на мероприятия.
-                    Соблюдение правил работы, требований. Держит слово
-                    <br />
-                    <br />
-                    Значения шкалы
-                    <br />
-                    <br />
-                    (-1): Сроки не соблюдаются. Требования, правила нарушаются.
-                    (0): не выявлен или регулярные задержки, предупреждает о
-                    них. (1): качество выражено, в целом человека можно назвать
-                    организованным, соблюдающим правила. (2): хорошо
-                    проявляется. Умеет планировать свою работу и придерживаться
-                    плана. Сложную задачу декомпозирует на отдельные
-                    мероприятия. (3) : ----
-                </p>
+            <div className={classes["hint"] + " " + classes["hint-off"]}>
+                {flag ? (
+                    <p>
+                        Соблюдение сроков. Вовремя приходит на мероприятия.
+                        Соблюдение правил работы, требований. Держит слово
+                        <br />
+                        <br />
+                        Значения шкалы
+                        <br />
+                        <br />
+                        (-1): Сроки не соблюдаются. Требования, правила
+                        нарушаются. (0): не выявлен или регулярные задержки,
+                        предупреждает о них. (1): качество выражено, в целом
+                        человека можно назвать организованным, соблюдающим
+                        правила. (2): хорошо проявляется. Умеет планировать свою
+                        работу и придерживаться плана. Сложную задачу
+                        декомпозирует на отдельные мероприятия. (3) : ----
+                    </p>
+                ) : (
+                    <div></div>
+                )}
             </div>
             <div className={classes["forms"]}>
                 <h2 className={classes["forms-h2"]}>Форма оценки</h2>
@@ -184,24 +189,28 @@ function Form(props) {
                     </label>
 
                     <Criterion
+                        info={setFlag}
                         nameCriterion="Вовлеченность"
                         name="competence1"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
+                        info={setFlag}
                         nameCriterion="Организованность"
                         name="competence2"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
+                        info={setFlag}
                         nameCriterion="Обучаемость"
                         name="competence3"
                         onChange={onChange}
                         isChecked={isChecked}
                     />
                     <Criterion
+                        info={setFlag}
                         nameCriterion="Командность"
                         name="competence4"
                         onChange={onChange}

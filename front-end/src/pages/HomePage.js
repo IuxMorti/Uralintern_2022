@@ -14,7 +14,6 @@ const HomePage = () => {
     return (
         <div>
             <p>You are logged to the home page!</p>
-            <h1>киркирыч</h1>
         </div>
     );
 };

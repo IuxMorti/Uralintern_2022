@@ -4,7 +4,7 @@ import AuthContext from "../context/AuthContext";
 import classes from "../css/module/auth.module.css";
 
 const LoginPage = () => {
-    let { loginUser } = useContext(AuthContext);
+    let { loginUser, user } = useContext(AuthContext);
     console.log(loginUser);
     return (
         <div className={classes.main}>
@@ -29,38 +29,42 @@ const LoginPage = () => {
                     <h3 className={classes["authentication-h3"]}>
                         Вход в систему
                     </h3>
-                    <form onSubmit={loginUser}>
-                        <input
-                            className={classNames(
-                                classes["log-to-account-input"],
-                                classes["login"]
-                            )}
-                            type="text"
-                            name="username"
-                            aria-label="Логин"
-                            placeholder="Логин"
-                            required
-                        />
-                        <br />
-                        <input
-                            className={classNames(
-                                classes["log-to-account-input"],
-                                classes["password"]
-                            )}
-                            type="password"
-                            name="password"
-                            aria-label="Пароль"
-                            placeholder="Пароль"
-                            required
-                        />
-                        <br />
-                        <button
-                            className={classes["log-to-account-button"]}
-                            type="submit"
-                        >
-                            Войти
-                        </button>
-                    </form>
+                    {!user ? (
+                        <form onSubmit={loginUser}>
+                            <input
+                                className={classNames(
+                                    classes["log-to-account-input"],
+                                    classes["login"]
+                                )}
+                                type="text"
+                                name="username"
+                                aria-label="Логин"
+                                placeholder="Логин"
+                                required
+                            />
+                            <br />
+                            <input
+                                className={classNames(
+                                    classes["log-to-account-input"],
+                                    classes["password"]
+                                )}
+                                type="password"
+                                name="password"
+                                aria-label="Пароль"
+                                placeholder="Пароль"
+                                required
+                            />
+                            <br />
+                            <button
+                                className={classes["log-to-account-button"]}
+                                type="submit"
+                            >
+                                Войти
+                            </button>
+                        </form>
+                    ) : (
+                        <div>Вы уже Авторизированы</div>
+                    )}
                 </div>
             </div>
         </div>

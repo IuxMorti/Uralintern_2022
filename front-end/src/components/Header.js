@@ -6,13 +6,15 @@ const Header = () => {
     let { user, logoutUser } = useContext(AuthContext);
     return (
         <header className={classes["main-header"]}>
-            <img
-                className={classes["small-logo"]}
-                src={require("../images/logo_small.svg").default}
-                width="49.82"
-                height="50"
-                alt="Логотип"
-            />
+            <a href={user ? `/main` : ""}>
+                <img
+                    className={classes["small-logo"]}
+                    src={require("../images/logo_small.svg").default}
+                    width="49.82"
+                    height="50"
+                    alt="Логотип"
+                />
+            </a>
             {user ? (
                 <div className={classes["profile"]}>
                     <a href={user ? `/user/${user.user_id}` : ""}>
@@ -24,7 +26,12 @@ const Header = () => {
                             alt="Мой профиль"
                         />
                     </a>
-                    <p className={classes["profile-img"]}>Мой Профиль</p>
+                    <a
+                        href={user ? `/user/${user.user_id}` : ""}
+                        className={classes["profile-p"]}
+                    >
+                        Мой Профиль
+                    </a>
                 </div>
             ) : (
                 <div className={classes["profile"]}></div>
@@ -40,9 +47,13 @@ const Header = () => {
                         alt="Выйти"
                     />
                 </a>
-                <p className={classes["profile-p"]}>
+                <a
+                    href="/login"
+                    onClick={logoutUser}
+                    className={classes["profile-p"]}
+                >
                     {user ? "ВЫЙТИ" : "Авторизироваться"}
-                </p>
+                </a>
             </div>
         </header>
     );

@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import Form from "./pages/Form";
 import Report from "./pages/Report";
+import LoginRoute from "./utils/LoginRoute";
 
 function App() {
     return (
@@ -17,12 +18,16 @@ function App() {
             <Router>
                 <AuthProvider>
                     <Header />
-                    <PrivateRoute component={HomePage} path="/profile" exact />
-                    <Route path="/user/:userId" component={User} />
-                    <Route path="/team/:teamId" component={Team} />
-                    <Route component={LoginPage} path="/login" exact />
-                    <Route path="/form/:teamId" component={Form} />
-                    <Route path="/report/:teamId/:userId" component={Report} />
+                    <LoginRoute path="/" exact />
+                    <PrivateRoute path="/main" component={HomePage} />
+                    <PrivateRoute path="/user/:userId" component={User} />
+                    <PrivateRoute path="/team/:teamId" component={Team} />
+                    <Route path="/login" component={LoginPage} exact />
+                    <PrivateRoute path="/form/:teamId" component={Form} />
+                    <PrivateRoute
+                        path="/report/:teamId/:userId"
+                        component={Report}
+                    />
                     <Footer />
                 </AuthProvider>
             </Router>

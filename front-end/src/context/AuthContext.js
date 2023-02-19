@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         localStorage.removeItem("authTokens");
         history.push("/login");
+        console.log("logout");
     };
 
     // let updateToken = async ()=> {

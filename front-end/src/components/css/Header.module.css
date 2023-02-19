@@ -27,8 +27,15 @@
 }
 
 .profile-p{
+    color: white;
+    text-decoration: none;
     margin-left:20px;
     margin-top:22px;
+}
+
+.profile-p:hover{
+    text-decoration: none;
+    color: #db7107;
 }
 
 .exit{

@@ -12,11 +12,16 @@
     line-height: 18px;
     text-transform: uppercase;
     height:100%;
-
+    
     margin-top:86px;
     margin-right:70px;
 
 }
+
+.hint-off{
+    border: none;
+}
+
 
 .forms{
     width:391px;

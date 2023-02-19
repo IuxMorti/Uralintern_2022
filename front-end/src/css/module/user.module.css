@@ -100,3 +100,15 @@
     margin-bottom: 80px;
     color: #F57C00;
 }
+
+.info{
+    width: 237px;
+    height: 26px;
+    font-size: 18px;
+    line-height: 18px;
+    align-items: center;
+    text-align: center;
+    color: #F57C00;
+    margin-left:80px;
+    margin-bottom:2px;
+}
