@@ -6,3 +6,13 @@ def generate_password():
     chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
     size = random.randint(8, 12)
     return ''.join(random.choice(chars) for x in range(size))
+
+
+def upload_to(instance, filename: str):
+    """ Установливает имя для загруженного изображения в Trainee models.py
+    :param instance: Экземпляр объекта, для которого устанавливается изображение
+    :param filename: Имя файла
+    :return: Строка с именем файла
+    """
+    ext = filename.split('.')[-1]
+    return f'photos/user{instance.id}.{ext}'

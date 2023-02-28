@@ -1,13 +1,16 @@
-
-from rest_framework import status
+import validators
+from rest_framework import status, viewsets
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.generics import UpdateAPIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -126,9 +129,21 @@ def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-    serializer = CustomerSerializer1(data=request.data, instance=request.user)
+    serializer = CustomerSerializer(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_user_image(request, id):
+    user = Customer.objects.get(id=int(id))
+    if user.id != int(id):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    user.image = request.data['image']
+    user.save()
+    serializer = CustomerSerializer(user)
     return Response(serializer.data)
 
 
@@ -149,6 +164,18 @@ def get_team(request, id_team):
     a = Team.objects.get(id=int(id_team))
     b = TeamSerializer(a)
     return Response(b.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_chat(request, id_team):
+    team = Team.objects.get(id=int(id_team))
+    if team.id_tutor.id.id != request.user.id or not validators.url(request.data['team_chat']):
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    team.team_chat = request.data['team_chat']
+    team.save()
+    serializer = TeamSerializer(team)
+    return Response(serializer.data)
 
 
 @api_view()
@@ -206,7 +233,7 @@ def get_report(estimations):
 
 
 @api_view()
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def get_stages(request, id_team):
     team = Team.objects.get(id=id_team)
     if not team:
@@ -214,21 +241,35 @@ def get_stages(request, id_team):
     stages = Stage.objects.filter(id_project=team.id_project.id)
     return Response(StageSerializer(stages, many=True).data)
 
+
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_forms(request, id_user):
-    teams = Team.objects.filter(Q(interns__in=[id_user]))
-    count_stages = [[team.interns.count(), Stage.objects.filter(id_project=team.id_project.id)] for team in teams]
+    teams = Team.objects.filter(Q(interns__in=[id_user]) | Q(id_tutor=id_user)).distinct()
+    result = {'not estimated': 0, 'estimated': 0, 'total': 0}
+    for team in teams:
+        forms = get_forms_team(id_user, team.id).data
+        result['not estimated'] += forms['not estimated']
+        result['estimated'] += forms['estimated']
+        result['total'] += forms['total']
+    return Response(result)
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def get_forms_for_team(request, id_user, id_team):
+    return get_forms_team(id_user=id_user, id_team=id_team)
+
+
+def get_forms_team(id_user, id_team):
+    team = Team.objects.get(pk=id_team)
+    stages = Stage.objects.filter(Q(id_project=team.id_project.id) | Q(id_team=id_team))
     filtered_stages = []
-    for i in range(len(count_stages)):
-        stages = count_stages[i][1]
-        filtered_stages.append([count_stages[i][0]])
-        for s in stages:
-            if s.start_date <= datetime.date.today() <= s.end_date:
-                filtered_stages[i].append(s)
-    total_count = sum(i[0] * (len(i[1:])) for i in filtered_stages)
-    filtered_stages = [filtered_stage[1] for filtered_stage in filtered_stages]
-    user_estimations = Estimation.objects.filter(id_appraiser=1, id_stage__in=filtered_stages)
+    for stage in stages:
+        if stage.start_date and stage.end_date and stage.start_date <= datetime.date.today() <= stage.end_date:
+            filtered_stages.append(stage)
+    total_count = team.interns.count() * len(filtered_stages)
+    user_estimations = Estimation.objects.filter(id_appraiser=id_user, id_stage__in=filtered_stages, id_team=id_team)
     return Response({'not estimated': total_count - len(user_estimations),
                      'estimated': len(user_estimations),
                      'total': total_count})

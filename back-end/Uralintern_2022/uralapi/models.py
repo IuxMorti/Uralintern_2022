@@ -6,17 +6,17 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 import datetime
-
+import os
 import django.db.utils
 from django.db import models, connection
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+from .functions import upload_to
 from django.conf import settings
 
 
@@ -50,7 +50,7 @@ class Customer(AbstractUser):
     username = models.CharField(max_length=100, verbose_name='----!', null=True, blank=True)
     surname = models.CharField(max_length=100, verbose_name='Фамилия')
     firstname = models.CharField(max_length=100, verbose_name='Имя')
-    patronymic = models.CharField(max_length=100, verbose_name='Отчество')
+    patronymic = models.CharField(max_length=100, verbose_name='Отчество', null=True, blank=True)
     role_director = models.BooleanField(verbose_name='Роль руководителя', default=False)
     role_tutor = models.BooleanField(verbose_name='Роль куратора', default=False)
     role_intern = models.BooleanField(verbose_name='Роль стажёра', default=True)
@@ -58,11 +58,13 @@ class Customer(AbstractUser):
     unhashed_password = models.CharField(max_length=20, blank=True, null=True, verbose_name='Пароль')
     educational_institution = models.CharField(max_length=500, blank=True, null=True, verbose_name='Университет')
     specialization = models.CharField(max_length=500, blank=True, null=True, verbose_name='Специальность')
-    course = models.CharField(max_length=2, blank=True, null=True, verbose_name='Курс обучения')
-    telephone = models.CharField(max_length=100, blank=True, null=True, verbose_name='Телефон')
+    course = models.IntegerField(blank=True, null=True, verbose_name='Курс обучения',
+                                 validators=[MinValueValidator(1), MaxValueValidator(6)])
+    telephone = models.CharField(max_length=16, blank=True, null=True, verbose_name='Телефон',
+                                 validators=[RegexValidator(regex=r"^\+?1?\d{8,15}$")])
     telegram = models.URLField(blank=True, null=True, verbose_name='Ссылка на телеграмм')
     vk = models.URLField(blank=True, null=True, verbose_name='Ссылка на VK')
-    image = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True, null=True, verbose_name='Фото')
+    image = models.ImageField(upload_to=upload_to, blank=True, null=True, verbose_name='Фото')
 
     objects = CustomerManager()
 
@@ -284,3 +286,12 @@ def create_stages(sender, instance: Project, **kwargs):
     for i in range(len(dates_stage)):
         Stage.objects.create(id_project=instance, start_date=dates_stage[i][0],
                              end_date=dates_stage[i][1], title=f'Неделя {i + 1} ({instance.title})')
+
+
+@receiver(pre_save, sender=Customer)
+def pre_save_image(sender, instance, *args, **kwargs):
+    """ instance old image file will delete from os """
+    ext = str(instance.image).split('.')[-1]
+    old_img = os.path.join(settings.BASE_DIR, f'media/photos/user{instance.id}.{ext}')
+    if os.path.exists(old_img):
+        os.remove(old_img)
