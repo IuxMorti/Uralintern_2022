@@ -26,7 +26,8 @@ class CustomerSerializer(serializers.Serializer):
     telephone = serializers.CharField(allow_null=True, validators=[RegexValidator(regex=r"^\+?1?\d{8,15}$")])
     telegram = serializers.URLField(allow_null=True)
     vk = serializers.URLField(allow_null=True)
-    image = serializers.ImageField(allow_null=True)
+    # image = serializers.ImageField(allow_null=True)
+    image = serializers.CharField(allow_null=True)
 
     def update(self, instance, validated_data):
         instance.surname = validated_data.get('surname', instance.surname)

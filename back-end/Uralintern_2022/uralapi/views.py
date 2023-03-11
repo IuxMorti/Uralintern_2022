@@ -135,7 +135,7 @@ def change_user(request, id, *args, **kwargs):
     return Response(serializer.data)
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def change_user_image(request, id):
     user = Customer.objects.get(id=int(id))
