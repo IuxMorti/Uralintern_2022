@@ -10,6 +10,7 @@ import datetime
 #                   'email', 'unhashed_password', 'educational_institution',
 #                   'specialization', 'course', 'telephone',
 #                   'telegram', 'vk', 'image')
+
 class CustomerSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     surname = serializers.CharField()
@@ -19,15 +20,14 @@ class CustomerSerializer(serializers.Serializer):
     role_tutor = serializers.BooleanField()
     role_intern = serializers.BooleanField()
     email = serializers.EmailField()
-    unhashed_password = serializers.CharField()
+    #unhashed_password = serializers.CharField()
     educational_institution = serializers.CharField(allow_null=True)
     specialization = serializers.CharField(allow_null=True)
     course = serializers.IntegerField(allow_null=True, validators=[MinValueValidator(1), MaxValueValidator(6)])
     telephone = serializers.CharField(allow_null=True, validators=[RegexValidator(regex=r"^\+?1?\d{8,15}$")])
     telegram = serializers.URLField(allow_null=True)
     vk = serializers.URLField(allow_null=True)
-    # image = serializers.ImageField(allow_null=True)
-    image = serializers.CharField(allow_null=True)
+    image = serializers.ImageField(allow_null=True)
 
     def update(self, instance, validated_data):
         instance.surname = validated_data.get('surname', instance.surname)
@@ -37,7 +37,7 @@ class CustomerSerializer(serializers.Serializer):
         instance.role_tutor = validated_data.get('role_tutor', instance.role_tutor)
         instance.role_intern = validated_data.get('role_intern', instance.role_intern)
         instance.email = validated_data.get('email', instance.email)
-        instance.unhashed_password = validated_data.get('unhashed_password', instance.unhashed_password)
+        #instance.unhashed_password = validated_data.get('unhashed_password', instance.unhashed_password)
         instance.educational_institution = validated_data.get('educational_institution', instance.educational_institution)
         instance.specialization = validated_data.get('specialization', instance.specialization)
         instance.course = validated_data.get('course', instance.course)
@@ -47,6 +47,26 @@ class CustomerSerializer(serializers.Serializer):
         instance.image = validated_data.get('image', instance.image)
         instance.save()
         return instance
+
+
+class CustomerSerializerUpdate(serializers.Serializer):
+    educational_institution = serializers.CharField(allow_null=True)
+    specialization = serializers.CharField(allow_null=True)
+    course = serializers.IntegerField(allow_null=True, validators=[MinValueValidator(1), MaxValueValidator(6)])
+    telephone = serializers.CharField(allow_null=True, validators=[RegexValidator(regex=r"^\+?1?\d{8,15}$")])
+    telegram = serializers.URLField(allow_null=True)
+    vk = serializers.URLField(allow_null=True)
+
+    def update(self, instance, validated_data):
+        instance.educational_institution = validated_data.get('educational_institution', instance.educational_institution)
+        instance.specialization = validated_data.get('specialization', instance.specialization)
+        instance.course = validated_data.get('course', instance.course)
+        instance.telephone = validated_data.get('telephone', instance.telephone)
+        instance.telegram = validated_data.get('telegram', instance.telegram)
+        instance.vk = validated_data.get('vk', instance.vk)
+        instance.save()
+        return instance
+
 
 # class CustomerSerializer1(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)

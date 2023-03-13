@@ -129,7 +129,7 @@ def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-    serializer = CustomerSerializer(data=request.data, instance=request.user)
+    serializer = CustomerSerializerUpdate(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
