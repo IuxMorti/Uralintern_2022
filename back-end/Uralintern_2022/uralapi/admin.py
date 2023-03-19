@@ -107,42 +107,6 @@ class EvaluationCriteriaAdmin(admin.ModelAdmin):
     list_filter = ('title',)
 
 
-# @admin.register(Intern)
-# class InternAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'role_intern')
-#     search_fields = ('id', 'role')
-#
-#     def has_add_permission(self, request, obj=None):
-#         return False
-#
-#     def has_change_permission(self, request, obj=None):
-#         return False
-
-
-# @admin.register(Tutor)
-# class TutorAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'role_tutor')
-#     search_fields = ('id', 'role')
-#
-#     def has_add_permission(self, request, obj=None):
-#         return False
-#
-#     def has_change_permission(self, request, obj=None):
-#         return False
-
-
-# @admin.register(Director)
-# class DirectorAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'role_director')
-#     search_fields = ('id', 'role')
-#
-#     def has_add_permission(self, request, obj=None):
-#         return False
-#
-#     def has_change_permission(self, request, obj=None):
-#         return False
-
-
 @admin.register(Estimation)
 class EstimationAdmin(admin.ModelAdmin):
     list_display = ('id_appraiser', 'customer_role', 'id_project', 'id_team', 'id_stage', 'id_intern', 'time_voting',

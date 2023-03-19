@@ -1,17 +1,9 @@
 import validators
-from rest_framework import status, viewsets
+from rest_framework import status
 from django.db.models import Q
-from django.shortcuts import render
-from rest_framework import generics
-from rest_framework.generics import UpdateAPIView
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes, action
-
-from rest_framework import permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -44,83 +36,14 @@ def get_routes(request):
         '/token',
         '/token/refresh',
     ]
-
     return Response(routes)
-
-
-# class CustomerAPIView(generics.ListAPIView):
-#     def get(self, request):
-#         c = Customer.objects.all()
-#         return Response({'posts': CustomerSerializer(c, many=True).data})
-#
-#     def post(self, request):
-#         serializer = CustomerSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#
-#         post_new = Customer.objects.create(
-#             surname=request.data['surname'],
-#             firstname=request.data['firstname'],
-#             patronymic=request.data['patronymic'],
-#             role_director=request.data['role_director'],
-#             role_tutor=request.data['role_tutor'],
-#             role_intern=request.data['role_intern'],
-#             mail=request.data['mail'],
-#             password=request.data['password'],
-#             educational_institution=request.data['educational_institution'],
-#             specialization=request.data['specialization'],
-#             course=request.data['course'],
-#             telephone=request.data['telephone'],
-#             telegram=request.data['telegram'],
-#             vk=request.data['vk'],
-#             image=request.data['image'],
-#         )
-#
-#         return Response({'post': CustomerSerializer(post_new).data})
-
-#
-# class CustomerAPIView(generics.ListCreateAPIView):
-#     queryset = Customer.objects.all()
-#     serializer_class = CustomerSerializer
-
-
-def main_page_login(request):
-    return render(request, 'authentication.html')
-
-
-def main_page(request):
-    return render(request, 'trainee/welcome-page.html')
-
-
-def profile(request):
-    return render(request, 'trainee/profile-change-info.html')
-
-
-def profile_change(request):
-    return render(request, 'trainee/profile-save-info.html')
-
-
-# def profile_edit(request):
-#     return HttpResponse('<h1>Редактирование профиля</h1>')
-
-def team_intern(request):
-    return render(request, 'trainee/team.html')
-
-
-def estimation_form_intern(request):
-    return render(request, 'trainee/forms.html')
-
-
-def reports_intern(request):
-    return render(request, 'trainee/reports.html')
 
 
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_user(request, id):
-    user = request.user
-    a = Customer.objects.get(id=int(id))
-    b = CustomerSerializer(a)
-    return Response(b.data)
+    user = CustomerSerializer(Customer.objects.get(id=int(id)))
+    return Response(user.data)
 
 
 @api_view(['PUT'])
@@ -128,7 +51,7 @@ def get_user(request, id):
 def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
     serializer = CustomerSerializerUpdate(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -139,8 +62,8 @@ def change_user(request, id, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def change_user_image(request, id):
     user = Customer.objects.get(id=int(id))
-    if user.id != int(id):
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    if request.user.id != int(id):
+        return Response(status=status.HTTP_403_FORBIDDEN)
     user.image = request.data['image']
     user.save()
     serializer = CustomerSerializer(user)
@@ -153,6 +76,8 @@ def get_user_teams(request, id_user):
     intern_teams = Team.objects.filter(interns__in=[id_user])
     tutor_teams = Team.objects.filter(id_tutor=int(id_user))
     # director_teams = Team.objects.filter(id_tutor=int(id_user))
+    if request.user.id != int(id_user):
+        return Response(status=status.HTTP_403_FORBIDDEN)
     b = TeamSerializer(intern_teams, many=True)
     c = TeamSerializer(tutor_teams, many=True)
     return Response({'intern': b.data, 'tutor': c.data})
@@ -170,8 +95,10 @@ def get_team(request, id_team):
 @permission_classes([IsAuthenticated])
 def change_chat(request, id_team):
     team = Team.objects.get(id=int(id_team))
-    if team.id_tutor.id.id != request.user.id or not validators.url(request.data['team_chat']):
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    if team.id_tutor.id.id != request.user.id:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    if request.data['team_chat'] and not validators.url(request.data['team_chat']):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
     team.team_chat = request.data['team_chat']
     team.save()
     serializer = TeamSerializer(team)
@@ -208,7 +135,7 @@ def estimate(request, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def get_estimations(request, id_user, id_team):
     if int(request.user.id) != int(id_user) and int(request.user.id) != int(Team.objects.get(id=id_team).id_tutor.id.id):
-        return Response({'Вы не можете смотреть данные отчеты'})
+        return Response(status=status.HTTP_403_FORBIDDEN)
     self_estimations = Estimation.objects.filter(id_appraiser=id_user, id_team=id_team, id_intern=id_user)
     self_estimation = get_report(self_estimations)
     team_estimations = Estimation.objects.filter(~Q(id_appraiser=id_user), id_team=id_team, id_intern=id_user)
@@ -237,7 +164,7 @@ def get_report(estimations):
 def get_stages(request, id_team):
     team = Team.objects.get(id=id_team)
     if not team:
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     stages = Stage.objects.filter(id_project=team.id_project.id)
     return Response(StageSerializer(stages, many=True).data)
 
@@ -245,6 +172,8 @@ def get_stages(request, id_team):
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_forms(request, id_user):
+    if request.user.id != int(id_user):
+        Response(status=status.HTTP_403_FORBIDDEN)
     teams = Team.objects.filter(Q(interns__in=[id_user]) | Q(id_tutor=id_user)).distinct()
     result = {'not estimated': 0, 'estimated': 0, 'total': 0}
     for team in teams:
@@ -258,6 +187,8 @@ def get_forms(request, id_user):
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_forms_for_team(request, id_user, id_team):
+    if request.user.id != int(id_user):
+        Response(status=status.HTTP_403_FORBIDDEN)
     return get_forms_team(id_user=id_user, id_team=id_team)
 
 

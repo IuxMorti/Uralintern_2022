@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 import datetime
 import os
-import django.db.utils
 from django.db import models, connection
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -293,5 +292,5 @@ def pre_save_image(sender, instance, *args, **kwargs):
     """ instance old image file will delete from os """
     ext = str(instance.image).split('.')[-1]
     old_img = os.path.join(settings.BASE_DIR, f'media/photos/user{instance.id}.{ext}')
-    if os.path.exists(old_img):
+    if os.path.exists(old_img) and str(instance.image) != f'photos/user{instance.id}.{ext}':
         os.remove(old_img)
