@@ -133,6 +133,18 @@ def estimate(request, *args, **kwargs):
 
 @api_view()
 @permission_classes([IsAuthenticated])
+def get_estimation(request, id_user, id_team, id_stage, id_intern):
+    if int(request.user.id) != int(id_user):
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    estimation = Estimation.objects.filter(id_appraiser=id_user, id_team=id_team, id_stage=id_stage, id_intern=id_intern)
+    if estimation:
+        return Response(EstimationSerializer(estimation, many=True).data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
 def get_estimations(request, id_user, id_team):
     if int(request.user.id) != int(id_user) and int(request.user.id) != int(Team.objects.get(id=id_team).id_tutor.id.id):
         return Response(status=status.HTTP_403_FORBIDDEN)
