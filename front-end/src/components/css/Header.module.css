@@ -51,3 +51,8 @@
 .exit-p{
     margin-top:22px;
 }
+
+.exit-p:hover, .exit-img:hover{
+    color: #db7107;
+    cursor: pointer;
+}

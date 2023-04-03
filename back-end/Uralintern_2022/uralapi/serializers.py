@@ -48,6 +48,10 @@ class TutorSerializer(serializers.Serializer):
     id = CustomerSerializer()
 
 
+class DirectorSerializer(serializers.Serializer):
+    id = CustomerSerializer()
+
+
 class EvaluationCriteriaSerializer(serializers.Serializer):
     title = serializers.CharField()
     description = serializers.CharField()
@@ -64,9 +68,18 @@ class StageSerializer(serializers.Serializer):
     evaluation_criteria = EvaluationCriteriaSerializer(many=True)
 
 
+class ProjectSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    id_event = serializers.CharField()
+    title = serializers.CharField()
+    id_director = DirectorSerializer()
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+
+
 class TeamSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    id_project = serializers.CharField()
+    id_project = ProjectSerializer()
     title = serializers.CharField()
     id_tutor = TutorSerializer()
     interns = InternsSerializer(many=True)

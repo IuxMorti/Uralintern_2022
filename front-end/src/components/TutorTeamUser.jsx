@@ -5,9 +5,7 @@ import BASE_URL from '../Auth/BaseUrl';
 
 
 function TutorTeamUser({intern, team_id}) {
-
-    
-    console.log(team_id);
+    //console.log(team_id);
     if(!intern){
         return <div></div>;
     }
@@ -24,11 +22,11 @@ function TutorTeamUser({intern, team_id}) {
             alt="фото юзера"/>
         </div>
         <div className={classes["fio"]}>
-            <a href={`../user/${intern?.id}`}>{`${intern?.surname} ${intern?.firstname} ${intern?.patronymic}`}</a>
+            <a href={`../user/${intern?.id}`}>{`${intern?.surname ?? ""} ${intern?.firstname ?? ""} ${intern?.patronymic ?? ""}`}</a>
         </div>
             <div className={classes["contacts"]}>
-                <a href={intern?.vk ?? ""} >ВК</a>
-                <p><a href={intern?.telegram ?? ""}>ТГ</a></p>
+                <a target="_blank" rel="noreferrer"  href={intern?.vk ?? ""} >ВК</a>
+                <p><a target="_blank" rel="noreferrer" href={intern?.telegram ?? ""}>ТГ</a></p>
                 <p>{intern.email}</p>
             </div>
             <div className={classes["education"]}>
@@ -37,7 +35,7 @@ function TutorTeamUser({intern, team_id}) {
                 <p>{intern?.course ?? "Курс"}</p>
             </div>
             <TeamTableForm team_id={team_id} user_id={intern.id}/>
-            <div className={classes["link"]}><a className={classes["detailed-report-a"]}  href={`../report/${team_id}/${intern.id}`}>Полный отчет</a></div>
+            <div className={classes["link"]}><a className={classes["detailed-report-a"]}  href={`../report/${team_id}/${intern.id}`}>Отчёт</a></div>
     </li>
     );
 }

@@ -6,11 +6,12 @@ import Navigation from "../components/Navigation";
 import UserInput from "../components/UserInput";
 import AuthContext from "../context/AuthContext";
 import useAxios from "../utils/useAxios";
-//import "../css/trainee/styles-profile.css";
 import FilledForms from "../components/FilledForms";
 import classes from "../css/module/user.module.css";
 import classNames from "classnames";
 import BASE_URL from "../Auth/BaseUrl";
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
 
 const User = () => {
     let { userId } = useParams();
@@ -20,9 +21,6 @@ const User = () => {
     let [status, SetStatus] = useState(-1);
     let [isCheck, setCheck] = useState(true);
     let [userClone, setClone] = useState({});
-    const [photo, setPhoto] = useState(
-        require("../images/profile.svg").default
-    );
     const changeUser = ({ name, value }) => {
         if (!Object.keys(userClone).length) {
             setClone({ ...userData });
@@ -31,32 +29,65 @@ const User = () => {
             ...userClone,
             [name]: String(value).length !== 0 ? value : null,
         });
-        console.log(userClone);
+        //console.log(userClone);
     };
 
     const getUser = async () => {
-        try {
-            const response = await api.get(END_POINTS.API.GET_USER + userId);
-            SetStatus(response.status);
-            if (response.status === 200) {
-                const data = response.data;
-                setUser({ ...data });
-                setClone({ ...data });
-            } else {
-                console.log(status);
-            }
-        } catch {
-            console.log(status);
-        }
+        api.get(END_POINTS.API.GET_USER + userId)
+            .then((res) => {
+                const data = res.data;
+                setUser({
+                    ...data,
+                });
+                setClone({
+                    ...data,
+                });
+            })
+            .catch((err) => console.log(err));
     };
 
-    const saveChange = () => {
+    const saveChange = async () => {
         edit();
-        try {
-            api.put(END_POINTS.API.CHANGE_INFO + user.user_id, userClone);
-        } catch (e) {
-            console.log(e);
-        }
+
+        api.put(END_POINTS.API.CHANGE_INFO + user.user_id, userClone)
+            .then((res) => {
+                setUser({ ...userClone });
+                alertify.notify("Данные успешно изменены.", "success");
+            })
+            .catch((err) => {
+                if (err.response) {
+                    const answer = [];
+                    for (let field in err.response.data) {
+                        if (field === "telephone")
+                            answer.push(`некорректный ввод в поле "Телефон"`);
+                        if (field === "vk")
+                            answer.push(
+                                `некорректный ввод в поле "VK": ссылка должна начинаться с http(s)\\\\:`
+                            );
+                        if (field === "telegram")
+                            answer.push(
+                                `некорректный ввод в поле "telegram": ссылка должна начинаться с http(s)\\\\:`
+                            );
+                        if (field === "educational_institution")
+                            answer.push(
+                                `некорректный ввод в поле "Учебное заведение"`
+                            );
+                        if (field === "specialization")
+                            answer.push(
+                                `некорректный ввод в поле "Специальность"`
+                            );
+                        if (field === "course")
+                            answer.push(`введено слишком большое число`);
+                        setClone({ ...userData });
+                    }
+
+                    alertify.error(answer.join("\n"), 5);
+                } else if (err.request) {
+                    alertify.error("you killing me?", 5);
+                } else {
+                    alertify.error("i don't know", 5);
+                }
+            });
     };
 
     const edit = () => setCheck(!isCheck);
@@ -65,27 +96,47 @@ const User = () => {
         getUser();
     }, []);
 
-    const getPhoto = async () => {
-        if (!userData || !userData?.image) return;
-        try {
-            console.log(userData.image);
-            const response = await api.get(userData.image);
-            setPhoto(URL.createObjectURL(response.data));
-        } catch (e) {
-            console.log(e);
-        }
+    const updatePhoto = async (photos) => {
+        if (!photos) return;
+        const formData = new FormData();
+        formData.append("image", photos[0], photos[0].name);
+        await api
+            .put(END_POINTS.API.CHANGE_IMAGE + user.user_id, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then(() => {
+                getUser();
+                alertify.notify("фото успешно изменено.", "success");
+            })
+            .catch((err) => alertify.error(err));
     };
 
-    useEffect(() => {
-        getPhoto();
-    }, [userData]);
+    const deletePhoto = async () => {
+        await alertify.confirm(
+            "uralintern",
+            "вы точно хотите удалить фото?",
+            () => {
+                api.put(END_POINTS.API.CHANGE_IMAGE + user.user_id, {
+                    image: null,
+                })
+                    .then(() => {
+                        getUser();
+                        alertify.notify("фото успешно удалено.", "success");
+                    })
+                    .catch((err) => alertify.error(err));
+            },
+            () => {}
+        );
+    };
 
-    if (status === -1) {
-        return <div>Ошибка</div>;
+    if (Object.keys(userData).length === 0) {
+        return <div style={{ minHeight: "660px" }}>error</div>;
     }
-
     return (
         <div className={classes.main}>
+            <Navigation />
             <div className={classes["profile-info"]}>
                 <div className="main-profile">
                     <h2 className={classes["profile-info-h2"]}>Профиль</h2>
@@ -101,23 +152,50 @@ const User = () => {
                             height="135"
                             alt="imageuser"
                         />
-                        {/* {userId == user.user_id ? (
+                        {userId == user.user_id ? (
                             <FilledForms userId={user.user_id} />
                         ) : (
                             <div></div>
-                        )} */}
+                        )}
                     </div>
-                    {/* {user.user_id == userId ? (
-                        <button className={classes["change-photo"]}>
-                            Изменить фото
-                        </button>
-                    ) : (
+                    {user.user_id != userId ? (
                         <div></div>
-                    )} */}
+                    ) : (
+                        <div>
+                            <label
+                                className={classes["input__file-button"]}
+                                htmlFor="input__file"
+                            >
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                        updatePhoto(e.target.files)
+                                    }
+                                    id="input__file"
+                                    className={`input ${classes["input__file"]}`}
+                                />
+                                <span
+                                    className={
+                                        classes["input__file-button-text"]
+                                    }
+                                >
+                                    Изменить фото
+                                </span>
+                            </label>
+
+                            <button
+                                onClick={() => deletePhoto()}
+                                className={classes["change-photo"]}
+                            >
+                                Удалить фото
+                            </button>
+                        </div>
+                    )}
                     <div className={classes["fio-email"]}>
-                        <p
-                            className={classes["fio"]}
-                        >{`${userData.surname} ${userData.firstname} ${userData.patronymic}`}</p>
+                        <p className={classes["fio"]}>{`${userData.surname} ${
+                            userData.firstname
+                        } ${userData.patronymic ?? ""}`}</p>
                         <p className={classes["email"]}>
                             {userData.email ?? "email"}
                         </p>
@@ -139,9 +217,9 @@ const User = () => {
                             readonly={isCheck}
                         />
                     ) : (
-                        <p className={classes["info"]}>
+                        <span className={classes["info"]}>
                             {userClone.educational_institution ?? "нет данных"}
-                        </p>
+                        </span>
                     )}
 
                     <div>Специальность: </div>
@@ -154,9 +232,9 @@ const User = () => {
                             readonly={isCheck}
                         />
                     ) : (
-                        <p className={classes["info"]}>
+                        <span className={classes["info"]}>
                             {userClone.specialization ?? "нет данных"}
-                        </p>
+                        </span>
                     )}
 
                     <div>Курс: </div>
@@ -164,13 +242,16 @@ const User = () => {
                         <UserInput
                             onChange={changeUser}
                             name="course"
+                            type="number"
+                            min={1}
+                            max={6}
                             value={userClone.course}
                             readonly={isCheck}
                         />
                     ) : (
-                        <p className={classes["info"]}>
+                        <span className={classes["info"]}>
                             {userClone.course ?? "нет данных"}
-                        </p>
+                        </span>
                     )}
                 </div>
                 <h3 className={classes["contact-h"]}>Контакты: </h3>
@@ -186,13 +267,15 @@ const User = () => {
                         <UserInput
                             onChange={changeUser}
                             name="telephone"
+                            type="tel"
                             value={userClone.telephone}
                             readonly={isCheck}
+                            placeholder="+79..."
                         />
                     ) : (
-                        <p className={classes["info"]}>
+                        <span className={classes["info"]}>
                             {userClone.telephone ?? "нет данных"}
-                        </p>
+                        </span>
                     )}
 
                     <div>Ссылка в VK: </div>
@@ -201,11 +284,18 @@ const User = () => {
                         <UserInput
                             onChange={changeUser}
                             name="vk"
+                            type="url"
                             value={userClone.vk}
                             readonly={isCheck}
+                            placeholder="http(s)://.."
                         />
                     ) : (
-                        <a href={userClone.vk} className={classes["info"]}>
+                        <a
+                            href={userClone.vk}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={classes["info"]}
+                        >
                             {userClone.vk ?? "нет данных"}
                         </a>
                     )}
@@ -216,11 +306,15 @@ const User = () => {
                         <UserInput
                             onChange={changeUser}
                             name="telegram"
+                            type="url"
                             value={userClone.telegram}
                             readonly={isCheck}
+                            placeholder="http(s)://.."
                         />
                     ) : (
                         <a
+                            target="_blank"
+                            rel="noreferrer"
                             href={userClone.telegram}
                             className={classes["info"]}
                         >
@@ -247,7 +341,6 @@ const User = () => {
                     )}
                 </div>
             </div>
-            <Navigation />
         </div>
     );
 };

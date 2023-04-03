@@ -19,9 +19,7 @@ function Report() {
             );
             const data = response.data;
             setEstimations(data);
-            console.log(data);
         } catch (e) {
-            console.log("EXCPETION", e);
             setEstimations({
                 total_estimation: {
                     competence1: -1,
@@ -67,13 +65,11 @@ function Report() {
 
     return (
         <div className={classes["main"]}>
+            <Navigation />
             <div className={classes["report-info"]}>
                 <h1 className={classes["report-info-h1"]}>Отчёты</h1>
                 <h2 className={classes["report-info-h2"]}>Общая</h2>
-                <Graph
-                    legend="Общая оценка"
-                    values={getValue("total_estimation")}
-                />
+                <Graph legend="Общая" values={getValue("total_estimation")} />
                 <h2 className={classes["report-info-h2"]}>Самооценка</h2>
                 <Graph
                     legend="Самооценка"
@@ -85,7 +81,6 @@ function Report() {
                     values={getValue("team_estimation")}
                 />
             </div>
-            <Navigation />
         </div>
     );
 }

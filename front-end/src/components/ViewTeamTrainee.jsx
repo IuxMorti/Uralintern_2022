@@ -6,24 +6,26 @@ import classes from "./css/ViewTeamTrainee.module.css"
 
 
 function ViewTeamTrainee({team}) {
+    
     const {user} = useContext(AuthContext);
     return (
         <div className={classes["main"]}>
+            <Navigation />
             <div className={classes["team"]}>
                 <div className={classes["team-info"]}>
                     <h2 className={classes["team-info-h2"]}>{team.title}</h2>
                     <p className={classes["team-info-p"]}>
-                        Проект: <span>{team?.id_project ?? "нет данных"}</span>
+                        Проект: <span>{team?.id_project?.title ?? "нет данных"}</span>
                     </p>
                     <p className={classes["team-info-p"]}>
                         Куратор:{" "}
-                        <a href={"../user/" + team?.id_tutor?.id.id}>
+                        <a target="_blank" rel="noreferrer" href={"../user/" + team?.id_tutor?.id.id}>
                             {team["id_tutor"]
                                 ? team?.id_tutor.id?.surname +
                                   " " +
                                   team?.id_tutor.id?.firstname +
                                   " " +
-                                  team?.id_tutor.id?.patronymic
+                                  (team?.id_tutor.id?.patronymic ?? "")
                                 : "Нет данных"}
                         </a>
                     </p>
@@ -31,7 +33,7 @@ function ViewTeamTrainee({team}) {
                         Командный чат:
                         <span>
                             {" "}
-                            {<a href={team?.team_chat}>{team?.team_chat}</a> ??
+                            {<a target="_blank" rel="noreferrer" href={team?.team_chat}>{team?.team_chat}</a> ??
                                 "нет данных"}
                         </span>
                     </p>
@@ -48,7 +50,7 @@ function ViewTeamTrainee({team}) {
 
                 </div>
             </div>
-            <Navigation />
+            
         </div>
     );
 }

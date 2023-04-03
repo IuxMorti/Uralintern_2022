@@ -9,7 +9,8 @@ import END_POINTS from "../Auth/EndPoints";
 const baseURL = BASE_URL;
 
 const useAxios = () => {
-    const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);
+    const { authTokens, setUser, setAuthTokens, logoutUser } =
+        useContext(AuthContext);
 
     const axiosInstance = axios.create({
         baseURL,
@@ -22,20 +23,31 @@ const useAxios = () => {
 
         if (!isExpired) return req;
 
-        const response = await axios.post(
-            `${baseURL + END_POINTS.AUTH.REFRESH}`,
-            {
-                refresh: authTokens.refresh,
+        try {
+            const response = await axios.post(
+                `${baseURL + END_POINTS.AUTH.REFRESH}`,
+                {
+                    refresh: authTokens.refresh,
+                }
+            );
+            if (response.status === 200) {
+                localStorage.setItem(
+                    "authTokens",
+                    JSON.stringify(response.data)
+                );
+
+                setAuthTokens(response.data);
+                setUser(jwt_decode(response.data.access));
+
+                req.headers.Authorization = `Bearer ${response.data.access}`;
+                return req;
             }
-        );
-
-        localStorage.setItem("authTokens", JSON.stringify(response.data));
-
-        setAuthTokens(response.data);
-        setUser(jwt_decode(response.data.access));
-
-        req.headers.Authorization = `Bearer ${response.data.access}`;
-        return req;
+        } catch (e) {
+            if (e.response.status === 401) {
+                logoutUser();
+                return req;
+            }
+        }
     });
 
     return axiosInstance;

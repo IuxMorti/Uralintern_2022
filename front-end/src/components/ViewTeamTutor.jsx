@@ -4,14 +4,17 @@ import TutorTeamUserList from './TutorTeamUserList';
 import classes from "./css/ViewTeamTutor.module.css"
 
 function ViewTeamTutor({team}) {
-    console.log(team);
+    
+
+    //console.log(team);
     return (
         <div className={classes["main"]}>
+            <Navigation />
             <div className={classes["team"]}>
                 <div className={classes["team-info"]}>
                     <h2 className={classes["team-info-h2"]}>{team.title}</h2>
                     <p className={classes["team-info-p"]}>
-                        Проект: <span>{team?.id_project ?? "нет данных"}</span>
+                        Проект: <span>{team?.id_project?.title ?? "нет данных"}</span>
                     </p>
                     <p className={classes["team-info-p"]}>
                         Куратор:{" "}
@@ -21,7 +24,7 @@ function ViewTeamTutor({team}) {
                                   " " +
                                   team?.id_tutor.id?.firstname +
                                   " " +
-                                  team?.id_tutor.id?.patronymic
+                                  (team?.id_tutor.id?.patronymic ?? "")
                                 : "Нет данных"}
                         </a>
                     </p>
@@ -43,7 +46,7 @@ function ViewTeamTutor({team}) {
                 </div>           
                 {/* <p className="team-numbers">(2/3/10)</p> */}
             </div>
-            <Navigation />
+            
         </div>
     );
 }

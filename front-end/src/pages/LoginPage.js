@@ -5,7 +5,6 @@ import classes from "../css/module/auth.module.css";
 
 const LoginPage = () => {
     let { loginUser, user } = useContext(AuthContext);
-    console.log(loginUser);
     return (
         <div className={classes.main}>
             <h2 className={classes["welcome-phrase"]}>Добро пожаловать!</h2>

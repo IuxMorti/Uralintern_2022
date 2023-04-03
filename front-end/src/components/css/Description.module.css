@@ -1,0 +1,17 @@
+.hint{
+    width:455px;
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    
+    margin-top:86px;
+
+}
+
+.hint li{
+    margin-bottom: 7px;
+}
+li::marker{
+    font-size: large;
+    font-weight: 600;
+}
