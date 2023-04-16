@@ -6,14 +6,14 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .functions import generate_password
 
 
-class CustomerCreationForm(UserCreationForm):
+class MyUserCreationForm(UserCreationForm):
     is_random_password = forms.BooleanField(label='Случайный пароль', required=False, initial=True)
 
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput, required=False)
 
     class Meta:
-        model = Customer
+        model = User
         fields = "__all__"
 
     def clean_password2(self):
@@ -24,7 +24,7 @@ class CustomerCreationForm(UserCreationForm):
         return password2
 
     def save(self, commit=True):
-        user = super(CustomerCreationForm, self).save(commit=False)
+        user = super(MyUserCreationForm, self).save(commit=False)
         # Если is_random_password выбран, то создать случайный пароль
         if self.cleaned_data['is_random_password']:
             user.set_password(generate_password())
@@ -37,5 +37,5 @@ class CustomerCreationForm(UserCreationForm):
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
-        model = Customer
+        model = User
         fields = ('email',)

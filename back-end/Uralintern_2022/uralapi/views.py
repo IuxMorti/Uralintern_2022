@@ -42,7 +42,7 @@ def get_routes(request):
 @api_view()
 @permission_classes([IsAuthenticated])
 def get_user(request, id):
-    user = CustomerSerializer(Customer.objects.get(id=int(id)))
+    user = UserSerializer(User.objects.get(id=int(id)))
     return Response(user.data)
 
 
@@ -52,7 +52,7 @@ def change_user(request, id, *args, **kwargs):
     user = request.user
     if user.id != int(id):
         return Response(status=status.HTTP_403_FORBIDDEN)
-    serializer = CustomerSerializerUpdate(data=request.data, instance=request.user)
+    serializer = UserSerializerUpdate(data=request.data, instance=request.user)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
@@ -61,12 +61,12 @@ def change_user(request, id, *args, **kwargs):
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def change_user_image(request, id):
-    user = Customer.objects.get(id=int(id))
+    user = User.objects.get(id=int(id))
     if request.user.id != int(id):
         return Response(status=status.HTTP_403_FORBIDDEN)
     user.image = request.data['image']
     user.save()
-    serializer = CustomerSerializer(user)
+    serializer = UserSerializer(user)
     return Response(serializer.data)
 
 
