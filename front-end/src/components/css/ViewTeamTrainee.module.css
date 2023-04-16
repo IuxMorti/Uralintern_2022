@@ -2,10 +2,9 @@
     display:flex;
 }
 .team{
-    width:1230px;
-    margin-left: 47px;
-    margin-left:0px;
     margin-top:60px;
+    align-items: center;
+    text-align: center;
 }
 .team-info{
     text-align: center;
@@ -44,8 +43,6 @@
     text-align: center;
     color: #FFFFFF;
     border:none;
-    margin-left: 40%;
-
     margin-bottom: 30px;
 }
 
@@ -66,7 +63,7 @@
     align-items: center;
     text-align: center;
     color: #000000;
-    margin-left:45%;
+    margin-left: 10%;
     margin-bottom: 20px;
 }
 

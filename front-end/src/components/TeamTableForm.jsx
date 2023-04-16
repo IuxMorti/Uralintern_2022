@@ -4,32 +4,26 @@ import useAxios from '../utils/useAxios';
 import classes from "./css/TableForm.module.css"
 
 function TeamTableForm({team_id, user_id}) {
-    console.log(team_id);
+    //console.log(team_id);
     const api = useAxios();
-    const [status,SetStatus] = useState(0);
     const [form, setForm] = useState({});
 
     const getEstimations = async () => {
-        try {
-            const response = await api.get(END_POINTS.API.GET_ESTIMATIONS + `${user_id}/${team_id}`);
-            SetStatus(response.status);
-            if (response.status === 200) {
-                const data = response.data.total_estimation;
-                setForm({ ...data });
-            } else {
-                console.log(response.status);
-            }
-        } catch(e) {
-            console.log("TABBLE ERROR");
-        }
+        
+            api.get(END_POINTS.API.GET_ESTIMATIONS + `${user_id}/${team_id}`)
+            .then(res => {
+                const data = res.data.total_estimation;
+                setForm({...data});
+        })
+            .catch(err => console.log("500"));
     };
     useEffect(() => {
         getEstimations();
 
-    }, [team_id, user_id]);
+    }, []);
 
 
-    if(status === 0){
+    if(!form){
         
         <table>
         <tr>

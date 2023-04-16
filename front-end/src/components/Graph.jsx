@@ -6,7 +6,7 @@ import { Radar } from "react-chartjs-2"
 
 function Graph({legend, values}) {
 
-    console.log(values);
+    //console.log(values);
 
     const datasets = [
         {
@@ -25,6 +25,9 @@ function Graph({legend, values}) {
 
     const data = {labels: ['Обучаемость','Командность','Вовлечённость','Организованность'], datasets};
     const chartOptions = {
+      legend: {
+        display: false
+      },
         scale: {
           ticks: {
             min: -1,
@@ -42,7 +45,6 @@ function Graph({legend, values}) {
         width="520px"
         height="420px"
         type='radar'
-        class=""
          options={chartOptions} data={data}/>
          </div>
     );

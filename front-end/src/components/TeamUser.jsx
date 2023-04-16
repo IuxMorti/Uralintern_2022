@@ -10,7 +10,7 @@ function TeamUser({intern}) {
     const {user} = useContext(AuthContext);
     //const PATH_IMAGE = "../"+ END_POINTS.IMAGE.IMAGE;
 
-    console.log(intern.image);
+    //console.log(intern.image);
     return (
     <li className={classes["command-info-person"]}>
                 <div>
@@ -26,7 +26,7 @@ function TeamUser({intern}) {
                 </div>
                 <div className={classes["text"]}>
                 <a href={`/user/${intern.id}`}>
-                    {user.user_id === intern.id? "Я": `${intern?.surname} ${intern?.firstname} ${intern?.patronymic}`}
+                    {user.user_id === intern.id? "Я": `${intern?.surname} ${intern?.firstname} ${intern?.patronymic ?? ""}`}
                 </a>
                 </div>
                 <div className={classes["text"]}>

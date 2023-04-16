@@ -1,4 +1,5 @@
 .team-ul{
+    width: 918px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -8,20 +9,27 @@
     display: flex;
     margin-left:70px;
     color: #F57C00;
-    border-bottom: solid rgba(0, 0, 0, 0.5) thin;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
     height:58px;
     align-items: center;
     margin-bottom:26px;
 }
 
 .empty-head{
-    width:35px;
+    margin-left: 192px;
 }
 
 
 
 .text-head{
-    margin-left: 250px;
+    margin-left: 155px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.text-head-fio{
+    margin-left: 124px;
     font-weight: 500;
     font-size: 18px;
     line-height: 18px;

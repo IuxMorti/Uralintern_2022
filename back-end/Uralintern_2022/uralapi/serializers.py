@@ -57,6 +57,10 @@ class DirectorSerializer(serializers.Serializer):
     id = UserSerializer()
 
 
+class DirectorSerializer(serializers.Serializer):
+    id = CustomerSerializer()
+
+
 class EvaluationCriteriaSerializer(serializers.Serializer):
     title = serializers.CharField()
     description = serializers.CharField()
@@ -71,6 +75,15 @@ class StageSerializer(serializers.Serializer):
     end_date = serializers.DateField()
     evaluation_criteria = EvaluationCriteriaSerializer(many=True)
     status = serializers.CharField()
+
+
+class ProjectSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    id_event = serializers.CharField()
+    title = serializers.CharField()
+    id_director = DirectorSerializer()
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
 
 
 class ProjectSerializer(serializers.Serializer):

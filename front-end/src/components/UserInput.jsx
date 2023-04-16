@@ -1,19 +1,20 @@
 import React from 'react';
 import classes from "./css/Input.module.css"
 
-function UserInput({type = "text", value, onChange,name, readonly}) {
+function UserInput({type = "text", value, onChange,name, readonly, ...atrb}) {
+    //console.log(atrb);
 
     return (
-        <div>
             <input
                 className={classes.input}
                 onChange={(e) => onChange({name: name, value: e.target.value})}
                 type={type}
+                
                 value={value}
                 readOnly={readonly}
+                {...atrb}
             />
-        </div>
+
     );
 }
-
 export default UserInput;

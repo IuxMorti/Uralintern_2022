@@ -37,23 +37,17 @@ const Header = () => {
                 <div className={classes["profile"]}></div>
             )}
             <div className={classes["exit"]}>
-                <a href="/login">
-                    <img
-                        className={classes["exit-img"]}
-                        onClick={logoutUser}
-                        src={require("../images/exit.svg").default}
-                        width="18"
-                        height="18"
-                        alt="Выйти"
-                    />
-                </a>
-                <a
-                    href="/login"
+                <img
+                    className={classes["exit-img"]}
                     onClick={logoutUser}
-                    className={classes["profile-p"]}
-                >
+                    src={require("../images/exit.svg").default}
+                    width="18"
+                    height="18"
+                    alt="Выйти"
+                />
+                <span onClick={logoutUser} className={classes["profile-p"]}>
                     {user ? "ВЫЙТИ" : "Авторизироваться"}
-                </a>
+                </span>
             </div>
         </header>
     );

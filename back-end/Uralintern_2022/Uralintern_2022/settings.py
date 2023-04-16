@@ -18,16 +18,15 @@ from collections import OrderedDict
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-envpath = os.path.join(os.path.abspath(os.path.dirname(__file__)), '.env')
-if os.path.exists(envpath):
-    load_dotenv(envpath, override=True)
+# envpath = os.path.join(os.path.abspath(os.path.dirname(__file__)), '.env')
+# if os.path.exists(envpath):
+#     load_dotenv(envpath, override=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-2pe!rbo3ybj%@k=8dbfzk&-c#)hfjm-4_ztyv6-w3ngg%oavj8'
-print(os.environ.get("NAME"))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

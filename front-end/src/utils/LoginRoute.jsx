@@ -5,7 +5,7 @@ import AuthContext from "../context/AuthContext";
 
 function LoginRoute({children, ...rest}) {
     const {user} = useContext(AuthContext);
-    console.log(user);
+
     return (
         <Route {...rest}>{!user ? <Redirect to={`../login`} /> : <Redirect to={`../user/${user.user_id}`} />}</Route>
     );

@@ -1,0 +1,24 @@
+.cloud{
+    width: 246px;
+    height: 121px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 30px;
+    margin-top:7px;
+}
+.filled-forms{
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    width:134px;
+    margin-left:59px;
+    margin-bottom: -20px;
+    margin-top:9px;
+    text-align: center;
+}
+.filled-forms-count{
+    font-size: 26px;
+    line-height: 30px;
+    color: #F57C00;
+    text-align: center;
+}

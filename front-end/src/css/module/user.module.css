@@ -4,7 +4,7 @@
 
 .profile-info{
     width: 697px;
-    margin-left:250px;
+    margin-left:207px;
     margin-top:54px;
 }
 
@@ -95,11 +95,70 @@
     line-height: 18px;
     align-items: center;
     text-align: center;
-    margin-left:159px;
+    margin-left: 110px;
     margin-top:49px;
     margin-bottom: 80px;
     color: #F57C00;
 }
+
+.change-info:hover{
+    cursor: pointer;
+    background: #f2f0f0;
+}
+
+
+.change-photo:hover{
+    cursor: pointer;
+    background: #964d03;
+}
+
+
+.input__wrapper {
+    width: 100%;
+    position: relative;
+    margin: 15px;
+    text-align: center;
+  }
+
+.input__file {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+
+.input__file-button {
+
+    width: 222px;
+    height: 38px;
+    background: #F57C00;
+    color: #fff;
+    font-size: 1.125rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 153px;
+    margin-bottom: 15px;
+}
+
+.input__file-button:hover{
+    background: #964d03;
+}
+
+
+
+.input__file-button-text {
+    margin: 0 auto;
+    line-height: 1;
+    margin-top: 1px;
+}
+
 
 .info{
     width: 237px;
@@ -111,4 +170,7 @@
     color: #F57C00;
     margin-left:80px;
     margin-bottom:2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

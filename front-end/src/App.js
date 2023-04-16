@@ -8,13 +8,14 @@ import Header from "./components/Header";
 import User from "./pages/User";
 import Footer from "./components/Footer";
 import Team from "./pages/Team";
-import Form from "./pages/Form";
 import Report from "./pages/Report";
 import LoginRoute from "./utils/LoginRoute";
+import Navigation from "./components/Navigation";
+import assessmentPage from "./pages/AssessmentPage";
 
 function App() {
     return (
-        <div className="App">
+        <div className="App" style={{ backgroundColor: "white" }}>
             <Router>
                 <AuthProvider>
                     <Header />
@@ -23,7 +24,10 @@ function App() {
                     <PrivateRoute path="/user/:userId" component={User} />
                     <PrivateRoute path="/team/:teamId" component={Team} />
                     <Route path="/login" component={LoginPage} exact />
-                    <PrivateRoute path="/form/:teamId" component={Form} />
+                    <PrivateRoute
+                        path="/form/:teamId"
+                        component={assessmentPage}
+                    />
                     <PrivateRoute
                         path="/report/:teamId/:userId"
                         component={Report}
